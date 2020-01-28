@@ -103,17 +103,23 @@ class HomeScreen extends React.Component {
 
         <TouchableOpacity 
         style = {styles.button}
-        onPress={this._showMoreApp}>
+        onPress={this._cameraNav}>
           <Text style={styles.button_text}> Scan my skin  🔍</Text>
         </TouchableOpacity>
 
-        {/* </View> */}
-        <Button title="Actually, sign me out :)" onPress={this._signOutAsync} />
+        <TouchableOpacity 
+        style = {[styles.button, {marginTop : 15}]}
+        onPress={this._cameraNav} > 
+          <Text style={styles.button_text}> Previous scans </Text>
+        </TouchableOpacity>
+
+
+        <Button title="Sign out" onPress={this._signOutAsync} />
       </View>
     );
   }
 
-  _showMoreApp = () => {
+  _cameraNav = () => {
     this.props.navigation.navigate('Camera');
   };
 
@@ -226,8 +232,6 @@ class CameraScreen extends React.Component {
       );
     }
   }
-
-
 }
 
 // ======================================================
@@ -235,27 +239,37 @@ class CameraScreen extends React.Component {
 // ======================================================
 
 class PredictionScreen extends React.Component{
+  static navigationOptions = {
+    title: 'Analysis',
+  };
+
   state = {
     isTfReady: false,
     isModelReady: false,
     predictions: null,
-    image: IMAGE_URI
+    image: IMAGE_URI,
+    start_predict: false
   }
 
-  async componentDidMount() {
-    await tf.ready()
-    this.setState({
-      isTfReady: true
-    })
-    //// TODO: adjust for our model
-    this.model = await mobilenet.load()
-    this.setState({ isModelReady: true })
+  // async componentDidMount() {
+  //   await tf.ready()
+  //   this.setState({
+  //     isTfReady: true
+  //   })
+  //   //// TODO: adjust for our model
+  //   this.model = await mobilenet.load()
+  //   this.setState({ isModelReady: true })
+  //   this.classifyImage()
+  // }
 
-    this.classifyImage()
-
+  async componentWillUnmount() {
+    this.state.isTfReady = false
+    this.state.isModelReady = false
+    this.state.start_predict = false
   }
-  // ML part
 
+
+  ////=============== ML part
   imageToTensor(rawImageData) {
     const TO_UINT8ARRAY = true
     const { width, height, data } = jpeg.decode(rawImageData, TO_UINT8ARRAY)
@@ -302,50 +316,91 @@ class PredictionScreen extends React.Component{
       </Text>
     )
   }
+
+  async loadMLmodel(){
+    this.setState({start_predict : true})
+    await tf.ready()
+    this.setState({
+      isTfReady: true
+    })
+    //// TODO: adjust for our model
+    this.model = await mobilenet.load()
+    this.setState({ isModelReady: true })
+    this.classifyImage()
+
+  }
+
+  renderConfirmPic(){
+    return(
+      <View style={{alignSelf: 'center',
+                  position: 'absolute',
+                  bottom: screenHeight*0.17,}}>
+      <TouchableOpacity style= {styles.button} onPress= {() => this.loadMLmodel()}>
+        <Text style = {styles.button_text}>
+            Process Picture
+          </Text> 
+
+      </TouchableOpacity>
+
+      <TouchableOpacity style= {[styles.button, {marginTop: 15}]} onPress= {() => this.props.navigation.navigate('Camera')}>
+        <Text style = {styles.button_text}>
+            Retake Picture
+          </Text> 
+
+      </TouchableOpacity>
+      </View>
+    )
+  }
   
   render() {
     return (
     <View style={styles.container}>
+      
+      {this.state.start_predict ? 
+        <View style={styles.loadingContainer}>
+            <Text style={styles.text}>
+              Tensorflow ready? {this.state.isTfReady ? <Text>✅</Text> : ''}
+            </Text>
+            {/* TODO: check if our predictor is also loaded */}
 
-      <View style={styles.loadingContainer}>
-          <Text style={styles.text}>
-            TFJS ready? {this.state.isTfReady ? <Text>✅</Text> : ''}
-          </Text>
-          {/* TODO: check if our predictor is also loaded */}
-
-          <View style={styles.loadingModelContainer}>
-            <Text style={styles.text}>Model ready? </Text>
-            {this.state.isModelReady ? (
-              <Text style={styles.text}>✅</Text>
-            ) : (
-              <ActivityIndicator size='small' />
-            )}
-          </View>
-      </View>
+            <View style={styles.loadingModelContainer}>
+              <Text style={styles.text}>Model ready? </Text>
+              {this.state.isModelReady ? (
+                <Text style={styles.text}>✅</Text>
+              ) : (
+                <ActivityIndicator size='small' />
+              )}
+            </View>
+            
+        </View> :  <Text> </Text>}
       
       <View style={styles.imageWrapper}>
       <Image source={{uri: this.state.image}} style={styles.imageContainer} />
       </View>
 
+      {this.state.start_predict ? <Text></Text>: this.renderConfirmPic()}
+
+      {/* Make sure to ask user if they want picture to be processed or not */}
+      {this.state.start_predict ? 
       <View style={styles.predictionWrapper}>
-          {this.state.isModelReady && this.state.image && (
+          {this.state.image && (
             <Text style={{fontSize : screenHeight*0.02}}>
-              Predictions: {this.state.predictions ? '' : ('Predicting...' ,<ActivityIndicator size='small' />)}
+              Results: {this.state.predictions ? '' : (<ActivityIndicator size='small' />)}
             </Text>
           )}
           {this.state.isModelReady &&
             this.state.predictions &&
             this.state.predictions.map(p => this.renderPrediction(p))}
-        </View>
+        </View> :  <Text> </Text>}
 
       <View style={{alignSelf: 'center',
                   position: 'absolute',
-                  bottom: 35,}}>
+                  bottom: "4%",}}>
       <Button title="Home" onPress= {() => this.props.navigation.navigate('Home')}/>
       </View>
 
 
-    </View>
+    </View> 
     );
 
   }
@@ -417,8 +472,8 @@ const styles = StyleSheet.create({
     fontSize: screenHeight*0.02
   },
   button: {
-    height: screenHeight*0.08,
-    width: screenWidth*0.9,
+    height: 0.07*screenHeight,
+    width: 0.9*screenWidth,
     // fontSize: screenHeight*0.02,
     backgroundColor: "white",
     // textAlign: 'center', 
@@ -427,7 +482,7 @@ const styles = StyleSheet.create({
     alignItems: 'center'
   },
   button_text: {
-    fontSize: screenHeight*0.04,
+    fontSize: screenHeight*0.03,
     textAlign: 'center',
     fontWeight: 'bold',
   },
