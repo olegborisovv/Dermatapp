@@ -16,9 +16,9 @@ import {
 
 import { assert } from '@tensorflow/tfjs-core/dist/util';
 import * as tf from '@tensorflow/tfjs';
-import { fetch } from '@tensorflow/tfjs-react-native';
+import { fetch, bundleResourceIO } from '@tensorflow/tfjs-react-native';
 import * as mobilenet from '@tensorflow-models/mobilenet'; // for now use this classifier
-import * as jpeg from 'jpeg-js'
+import * as jpeg from 'jpeg-js';
 
 const screenWidth = Math.round(Dimensions.get('window').width); // for XR:  414
 const screenHeight = Math.round(Dimensions.get('window').height); // for XR: 896
@@ -107,8 +107,25 @@ export default class PredictionScreen extends React.Component{
     this.setState({
       isTfReady: true
     })
-    //// TODO: adjust for our model
-    this.model = await mobilenet.load()
+    //// TODO: adjust for our model #########################################
+    // OLD MODEL: comment when trying with classifier
+    this.model = await mobilenet.load() 
+
+    // // SOME EXPERIMENTS
+    // console.log("before model")          
+    // // const path = './tfjs_custom_model/model.json'
+    // const path = require('../tfjs_custom_model/model.json')
+
+    // const path_weights = '../tfjs_custom_model/group1-shard1of4.bin'
+
+    // // this.model = await tf.loadLayersModel(path);
+    // // this.model = await tf.loadModel(path);
+    // this.model = await tf.loadLayersModel(bundleResourceIO(path, path_weights))
+
+    // console.log("all good")
+    //// TODO: adjust for our model #########################################
+
+
     this.setState({ isModelReady: true })
     this.classifyImage()
 
