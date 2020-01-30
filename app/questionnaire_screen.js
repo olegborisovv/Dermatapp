@@ -63,7 +63,7 @@ export default class QuestionScreen extends React.Component{
     
   render() {
     return (
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.scroll_container}>
         <ScrollView style={styles.scrollView}>
 
         {/* INTRO TEXT AND SKIP BUTTON */}
@@ -132,10 +132,15 @@ export default class QuestionScreen extends React.Component{
             </Dialog.Container>
         </View>
         {/* GO TO THE CAMERA SCREEN BUTTON */}       
-        <Button title="Scan my skin" onPress={() => {this.props.navigation.navigate('Camera')}}/>
-
+        {/* <Button title="Scan my skin" onPress={() => {this.props.navigation.navigate('Camera')}}/> */}
+        
 
         </ScrollView>
+        <TouchableOpacity style={[styles.button, {width:'100%'}]}
+            onPress={() => {this.props.navigation.navigate('Camera')}}>
+          <Text style={styles.button_text}> Scan my skin </Text>
+
+        </TouchableOpacity>
       </SafeAreaView>
     
     );

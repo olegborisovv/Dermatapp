@@ -19,6 +19,7 @@ import * as tf from '@tensorflow/tfjs';
 import { fetch, bundleResourceIO } from '@tensorflow/tfjs-react-native';
 import * as mobilenet from '@tensorflow-models/mobilenet'; // for now use this classifier
 import * as jpeg from 'jpeg-js';
+import * as FileSystem from 'expo-file-system';
 
 import styles from './style'
 
@@ -95,7 +96,30 @@ export default class PredictionScreen extends React.Component{
     }
   }
 
+  async saveImagePred(){
+    var id = Date.now().toString() // time of when pred is done, i.e. unique identifier
+
+    let main_dir = FileSystem.documentDirectory + "Predictions/"
+
+    // Check if Predictions dir exists, if not create it
+    var main_dir_info = await FileSystem.getInfoAsync(main_dir)
+    if (!main_dir_info.exists){
+      await FileSystem.makeDirectoryAsync(main_dir, { intermediates: true })
+    }
+
+    // Now create directory for our predixtion and image
+    let fileUri = main_dir+id+"/";
+
+    await FileSystem.makeDirectoryAsync(fileUri, { intermediates: true })
+    await FileSystem.copyAsync({from:this.state.image, to: fileUri+'Image.jpg'})
+    await FileSystem.writeAsStringAsync(fileUri+'Diagnosis.txt', this.state.predictions[0].className.toString(), 
+          { encoding: FileSystem.EncodingType.UTF8 });
+
+}
+
   renderPrediction = prediction => {
+    // console.log(this.state.predictions)
+    this.saveImagePred()
     return (
       <Text key={prediction.className} style={styles.text}>
         {prediction.className}
@@ -194,7 +218,7 @@ export default class PredictionScreen extends React.Component{
           )}
           {this.state.isModelReady &&
             this.state.predictions &&
-            this.state.predictions.map(p => this.renderPrediction(p))}
+            [this.state.predictions[0]].map(p => this.renderPrediction(p))}
         </View> :  <Text> </Text>}
 
       <View style={{alignSelf: 'center',

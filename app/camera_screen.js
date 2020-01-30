@@ -13,6 +13,9 @@ import {
   Image
 } from 'react-native';
 
+import * as FileSystem from 'expo-file-system';
+
+
 const screenWidth = Math.round(Dimensions.get('window').width); // for XR:  414
 const screenHeight = Math.round(Dimensions.get('window').height); // for XR: 896
 
@@ -45,6 +48,24 @@ export default class CameraScreen extends React.Component {
           // image_json = JSON.stringify({uri: IMAGE_URI})
           // console.log("img json:", IMAGE_URI)
           AsyncStorage.setItem('image_key', IMAGE_URI)
+
+          // console.log(data.base64)
+          // AsyncStorage.setItem('image_saved_base64', data.base64)
+
+          let fileUri = FileSystem.documentDirectory + "Images/";
+
+          try{
+            await FileSystem.copyAsync({from:IMAGE_URI, to: fileUri+'copy1.jpg'})
+            
+          }
+          catch(err){
+            await FileSystem.makeDirectoryAsync(fileUri, { intermediates: true })
+            await FileSystem.copyAsync({from:IMAGE_URI, to: fileUri+'copy1.jpg'})
+
+
+
+          }
+          // await FileSystem.writeAsStringAsync(fileUri, this.state.age.toString(), { encoding: FileSystem.EncodingType.UTF8 });
 
 
           

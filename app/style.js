@@ -3,12 +3,18 @@ import { StyleSheet, Dimensions } from 'react-native';
 const screenWidth = Math.round(Dimensions.get('window').width); // for XR:  414
 const screenHeight = Math.round(Dimensions.get('window').height); // for XR: 896
 
+var global_backgroundColor = '#A0FF93'
+
 export default StyleSheet.create({
     container: {
       flex: 1,
       alignItems: 'center',
       justifyContent: 'center',
-      backgroundColor: '#A0FF93'
+      backgroundColor: global_backgroundColor
+    },
+    scroll_container: {
+      flex: 1,
+      backgroundColor: global_backgroundColor,
     },
   
     text_input_style: {

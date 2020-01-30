@@ -154,7 +154,7 @@ handleOk_genetic = async () => {
     return (
       // <View style={styles.container}>
       // </View>
-      <SafeAreaView style={styles.container}>
+      <SafeAreaView style={styles.scroll_container}>
         <ScrollView style={styles.scrollView}>
 
                     {/* IMPLEMENTATION OF AGE SCREEN */}
