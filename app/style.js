@@ -83,9 +83,24 @@ export default StyleSheet.create({
       // backgroundColor: 'white',
       alignItems: 'center',
     },
+    
     scrollView: {
       // backgroundColor: '',
       marginHorizontal: 20,
+    },
+
+    diagnosis: {
+      minHeight: 0.15*screenHeight,
+      width: screenWidth*0.95,
+      // fontSize: screenHeight*0.02,
+      backgroundColor: "#B2FFE7",
+      // textAlign: 'center', 
+      justifyContent: 'center',
+      fontSize: screenHeight*0.02,
+      alignItems: 'center',
+      marginTop: 20,
+      borderColor: '#cf667f',
+      borderWidth: 5,
     },
 
   });

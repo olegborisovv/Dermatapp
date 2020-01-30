@@ -122,7 +122,8 @@ export default class PredictionScreen extends React.Component{
     // console.log(this.state.predictions)
     this.saveImagePred()
     return (
-      <Text key={prediction.className} style={styles.text}>
+
+      <Text key={prediction.className} style={[styles.text, {fontSize: screenHeight*0.02, fontWeight:"bold"}]}>
         {prediction.className}
       </Text>
     )
@@ -211,10 +212,12 @@ export default class PredictionScreen extends React.Component{
 
       {/* Make sure to ask user if they want picture to be processed or not */}
       {this.state.start_predict ? 
-      <View style={styles.predictionWrapper}>
+      <View style={[styles.diagnosis, {flexDirection: 'column',
+      position: 'relative',
+      top: screenHeight*0.2,}]}>
           {this.state.image && (
-            <Text style={{fontSize : screenHeight*0.02}}>
-              Results: {this.state.predictions ? '' : (<ActivityIndicator size='small' />)}
+            <Text style={{fontSize : screenHeight*0.02, textDecorationLine:'underline'}}>
+              Diagnosis: {this.state.predictions ? '' : (<ActivityIndicator size='small' />)}
             </Text>
           )}
           {this.state.isModelReady &&

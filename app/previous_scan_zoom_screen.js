@@ -16,6 +16,7 @@ import {
   ScrollView,
 } from 'react-native';
 
+import Dialog from "react-native-dialog";
 import * as FileSystem from 'expo-file-system';
 
 
@@ -37,7 +38,8 @@ export default class PreviousScansZoomScreen extends React.Component{
     file_dir : null,
 
     img_ready: false,
-    
+
+    dialogVisible : false,    
   }
   async componentDidMount() {
     // this.setState({id: await AsyncStorage.getItem('history_id')})
@@ -56,31 +58,94 @@ export default class PreviousScansZoomScreen extends React.Component{
 
   }
 
+  showDialog() {
+    this.setState({ dialogVisible: true });
+    this.state.dialogVisible = true
+  };
+ 
+  handleCancel = () => {
+    this.setState({ dialogVisible: false });
+  };
+
+  handleDelete = async () => {
+    this.setState({ dialogVisible: false });
+
+    await FileSystem.deleteAsync(this.state.file_dir)  
+    await this.props.navigation.state.params.onGoBack() 
+    this.props.navigation.goBack()
+
+  };
+
+
+
+  // deleteConfirmation(){
+  //   // this.showDialog()
+  //   // console.log(this.state.dialogVisible)
+  //   return(
+  //     <View>
+  //       <Dialog.Container visible={this.state.dialogVisible}>
+  //         <Dialog.Title>Delete file</Dialog.Title>
+  //         <Dialog.Description>
+  //         Are you sure that you want to delete
+  //         </Dialog.Description>
+  //         <Dialog.Button label="Delete" onPress={this.handleDelete} />
+  //         <Dialog.Button label="Cancel" onPress={this.handleCancel} />
+        
+  //       </Dialog.Container>
+  //     </View>
+
+  //   )
+  // }
+
   render(){
     return(
       <View style={styles.container}>
         {this.state.img_ready ?
         <View style={{position:'absolute', top:10, alignItems:'center'}}>
         <Image source={{uri: this.state.img_uri}} style={[styles.imageContainer]} />
-        <Text style={{fontSize:20, marginTop:10}}> Diagnosis: {"\n"} {this.state.diag}</Text>
 
-        <TouchableOpacity style={[styles.button, {marginTop:screenHeight*0.16}]} onPress={() => {this.props.navigation.goBack()}}>
+        <View style={styles.diagnosis}>
+          <Text style={{fontSize:screenHeight*0.02, textDecorationLine:'underline'}}> Diagnosis:</Text>
+          <Text style={{fontSize:screenHeight*0.02, marginTop:5, fontWeight:'bold'}}>{this.state.diag}</Text>
+        </View>
+        
+        {/* GO BACK SCREEN */}
+        <TouchableOpacity style={[styles.button, {marginTop:10}]} onPress={() => {this.props.navigation.goBack()}}>
           <Text style={styles.button_text}>Go back</Text>
         </TouchableOpacity>
 
-        <TouchableOpacity style={[styles.button, {marginTop:10}]} onPress={async () => {
-                                          await FileSystem.deleteAsync(this.state.file_dir)  
-                                          await this.props.navigation.state.params.onGoBack() 
-                                          this.props.navigation.goBack()
-                                          }}>
+        {/* DELETE BUTTON */}
+        <TouchableOpacity style={[styles.button, {marginTop:10}]} onPress={async () => {this.showDialog()}}>
           <Text style={[styles.button_text, {color:'red'}]}>Delete</Text>
         </TouchableOpacity>
 
+
+        {/* DELETION WARNING SCREEN */}
+        <Dialog.Container visible={this.state.dialogVisible}>
+          <Dialog.Title>Delete file</Dialog.Title>
+          <Dialog.Description>
+          Are you sure that you want to delete
+          </Dialog.Description>
+          <Dialog.Button label="Delete" style={{color:'red'}} onPress={this.handleDelete} />
+          <Dialog.Button label="Cancel" onPress={this.handleCancel} />
+        
+        </Dialog.Container>
+
         </View>
         :<Text></Text>}
+
+        <View style={{alignSelf: 'center',
+                          position: 'absolute',
+                          bottom: "4%",}}>
+          <Button title="Home" onPress= {() => this.props.navigation.navigate('Home')}/>
+        </View>
 
 
       </View>
     )
   }
 }
+
+const loc_styles = StyleSheet.create({
+  
+})
