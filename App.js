@@ -1,15 +1,5 @@
 import * as React from 'react';
 
-// import * as Permissions from 'expo-permissions';
-// import { Camera } from 'expo-camera';
-// import * as tf from '@tensorflow/tfjs';
-// import { fetch } from '@tensorflow/tfjs-react-native';
-// import * as mobilenet from '@tensorflow-models/mobilenet'; // for now use this classifier
-// import * as jpeg from 'jpeg-js'
-// import { assert } from '@tensorflow/tfjs-core/dist/util';
-
-
-
 import {
   ActivityIndicator,
   Button,
@@ -27,6 +17,11 @@ import {
 
 import CameraScreen from './app/camera_screen'
 import PredictionScreen from './app/prediction_screen'
+import ProfileScreen from './app/profile_screen'
+import PreviousScansSreen from './app/previous_scans_screen'
+import QuestionScreen from './app/questionnaire_screen'
+
+import styles from './app/style'
 
 import { createSwitchNavigator, createAppContainer } from 'react-navigation';
 import { createStackNavigator } from 'react-navigation-stack';
@@ -49,6 +44,14 @@ class SignInScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+        <Text style={{fontStyle: 'italic'}}>DEMO VERSION NOTE: </Text>
+        <Text>to login to app please type {'\n'}
+         in email box: "email"{'\n'}
+         in password box: "password"
+         </Text>
+         <Text style={{fontStyle: 'italic'}}>OR LEAVE TWO FIELDS EMPTY </Text>
+       
+        
           
         <TextInput
           style={styles.text_input_style}
@@ -97,20 +100,81 @@ class HomeScreen extends React.Component {
     title: 'Welcome to the Dermatapp!',
   };
 
+  state = {
+    uv : this.getUVIndex(),
+    // uv: '',
+    colorUV : 'green',
+    to_alert: true,
+
+  }
+
+  async componentDidMount(){
+    col = this.getUVcolor()
+    this.setState({colorUV: col})
+  }
+
+  getRandomInt(min, max){
+    min = Math.ceil(min);
+    max = Math.floor(max);
+    return Math.floor(Math.random() * (max - min)) + min;
+  }
+
+  getUVcolor(){
+    uv = this.state.uv
+    if (uv<3){
+      return 'green'
+    }
+    else if (uv>=3 && uv<6){
+      return 'yellow'
+    }
+    else if (uv>=6 && uv<8){
+      return 'orange'
+    }
+    else if (uv>=8 && uv<11){
+      return 'red'
+    }
+    else{
+      return 'violet'
+    }
+  }
+
+  getUVIndex(){
+    // Ideally connected to some API
+    
+
+    // For now just using random number
+    var uv = this.getRandomInt(0,12)
+
+    // console.log("uv",uv)
+    return uv
+  }
+
+  triggerAlert(){
+    // this.setState({to_alert: false}) 
+    this.state.to_alert = false
+    alert("UV index is high")    
+  }
+
   render() {
     return (
       <View style={styles.container}>
 
         <TouchableOpacity 
         style = {styles.button}
-        onPress={this._cameraNav}>
+        onPress={this._questNav}>
           <Text style={styles.button_text}> Scan my skin  🔍</Text>
         </TouchableOpacity>
 
         <TouchableOpacity 
         style = {[styles.button, {marginTop : 15}]}
-        onPress={this._cameraNav} > 
-          <Text style={styles.button_text}> Previous scans </Text>
+        onPress={onPress => {this.props.navigation.navigate('PreviousScans')}} > 
+          <Text style={styles.button_text}> Previous scans  📔</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity 
+        style = {[styles.button, {marginTop : 15}]}
+        onPress={onPress => {this.props.navigation.navigate('Profile')}} > 
+          <Text style={styles.button_text}> My Profile  📋</Text>
         </TouchableOpacity>
 
 
@@ -128,15 +192,21 @@ class HomeScreen extends React.Component {
             height: screenWidth*0.125}} />
 
         </TouchableOpacity>
-
+        
+        <View style={{position:'absolute', top:0, left:0, backgroundColor:'black', width: 90, height: 90,
+                      alignItems:'center', justifyContent:'center', opacity:0.5}}>
+        <Text style={{fontSize:30 , color:this.state.colorUV}}> 
+        {this.state.uv} UV </Text>
+        </View>
+        {this.state.uv > 5 && this.state.to_alert  ? this.triggerAlert() : <Text></Text>}
 
         <Button title="Sign out" onPress={this._signOutAsync} />
       </View>
     );
   }
 
-  _cameraNav = () => {
-    this.props.navigation.navigate('Camera');
+  _questNav = () => {
+    this.props.navigation.navigate('Questionnaire');
   };
 
   _signOutAsync = async () => {
@@ -180,7 +250,11 @@ class AuthLoadingScreen extends React.Component {
 
 const AppStack = createStackNavigator({ Home: HomeScreen, 
   Camera: CameraScreen, 
-  Prediction: PredictionScreen });
+  Prediction: PredictionScreen,
+  Profile: ProfileScreen,
+  PreviousScans: PreviousScansSreen,
+  Questionnaire: QuestionScreen,
+});
 
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });
 
@@ -195,80 +269,3 @@ export default createAppContainer(createSwitchNavigator(
     initialRouteName: 'AuthLoading',
   }
 ));
-
-
-const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
-    backgroundColor: '#A0FF93'
-  },
-
-  text_input_style: {
-    height: screenHeight*0.08, 
-    textAlign: 'center', 
-    width: screenWidth*0.9, 
-    borderColor: 'black', 
-    borderWidth: 1,
-    fontSize: screenHeight*0.02
-  },
-  button: {
-    height: 0.07*screenHeight,
-    width: 0.9*screenWidth,
-    // fontSize: screenHeight*0.02,
-    backgroundColor: "white",
-    // textAlign: 'center', 
-    justifyContent: 'center',
-    fontSize: screenHeight*0.02,
-    alignItems: 'center'
-  },
-  button_text: {
-    fontSize: screenHeight*0.03,
-    textAlign: 'center',
-    fontWeight: 'bold',
-  },
-  loadingContainer: {
-    position: 'absolute',
-    top: 10,
-    // marginTop: 10,
-    justifyContent: 'center'
-  },
-  loadingModelContainer: {
-    flexDirection: 'row',
-    marginTop: 10
-  },
-  imageWrapper: {
-    width: screenWidth*1,
-    height: screenWidth*1,
-    padding: 10,
-    borderColor: '#cf667f',
-    borderWidth: 5,
-    borderStyle: 'dashed',
-    // marginTop: screenHeight*0.05,
-    marginBottom: 10,
-    position: 'absolute',
-    top: screenHeight*0.1,
-    justifyContent: 'center',
-    alignItems: 'center'
-  },
-  imageContainer: {
-    width: screenWidth*0.95,
-    height: screenWidth*0.95,
-    padding: 10
-    // position: 'absolute',
-    // top: 10,
-    // left: 10,
-    // bottom: 10,
-    // right: 10
-  },
-  predictionWrapper: {
-    height: 100,
-    width: '100%',
-    flexDirection: 'column',
-    position: 'relative',
-    top: screenHeight*0.2,
-    // backgroundColor: 'white',
-    alignItems: 'center',
-  },
-});
