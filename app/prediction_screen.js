@@ -30,6 +30,7 @@ const screenHeight = Math.round(Dimensions.get('window').height); // for XR: 896
 export default class PredictionScreen extends React.Component{
   static navigationOptions = {
     title: 'Analysis',
+    headerLeft: () => {},
   };
 
   state = {

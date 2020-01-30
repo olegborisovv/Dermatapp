@@ -20,6 +20,7 @@ import PredictionScreen from './app/prediction_screen'
 import ProfileScreen from './app/profile_screen'
 import PreviousScansSreen from './app/previous_scans_screen'
 import QuestionScreen from './app/questionnaire_screen'
+import PreviousScansZoomScreen from './app/previous_scan_zoom_screen'
 
 import styles from './app/style'
 
@@ -253,6 +254,7 @@ const AppStack = createStackNavigator({ Home: HomeScreen,
   Prediction: PredictionScreen,
   Profile: ProfileScreen,
   PreviousScans: PreviousScansSreen,
+  PreviousScansZoom: PreviousScansZoomScreen,
   Questionnaire: QuestionScreen,
 });
 

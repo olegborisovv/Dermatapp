@@ -30,14 +30,20 @@ export default class PreviousScansSreen extends React.Component{
     };
 
   state = {
-    image_uri : null,
     image_ready : false,
-    contents_of_dir : null,
     images_list : [], // of format [{id:1, uri: '...'} ] possibly we can predictions there as well
   }
 
-  async componentDidMount(){
-    // read directory
+  // async componentWillUnmount() { // Didnt help
+  //   this.state.image_ready = false
+  //   this.state.images_list = [] // of format [{id:1, uri: '...'} ] possibly we can predictions there as well
+  // }
+
+  async updateView(){
+    this.setState({images_list: []})
+    this.setState({image_ready:false})
+
+
     let main_dir = FileSystem.documentDirectory + "Predictions/"
 
     // Check if Predictions dir exists, if not create it
@@ -46,45 +52,72 @@ export default class PreviousScansSreen extends React.Component{
       var directory_content = await FileSystem.readDirectoryAsync(main_dir)
       
       // make sure that Predictions dir is not empty!
-      console.log(directory_content.length)
       if (directory_content.length > 0){
+
+        directory_content = directory_content.sort().reverse()
       
         // here run the loop and extract all images 
         // follow this idea to loop over the views 
         // https://stackoverflow.com/questions/42519800/how-to-loop-and-render-elements-in-react-native
 
         for (var i = 0; i < directory_content.length; i++) {
-          var dict = {id : i,
+          var dict = {id : directory_content[i],
                   img: main_dir+directory_content[i]+'/Image.jpg',
                   diag: await FileSystem.readAsStringAsync(main_dir+directory_content[i]+'/Diagnosis.txt')
-
-                
                 }
           this.state.images_list.push(dict)
 
           this.setState({image_ready: true})
         }
+
       }
-
-
-
-
     }
-
 
   }
 
-// CREATE A MAP TO ITERATE
-  buttonsListArr = this.state.images_list.map(unique_img => (
-    <TouchableOpacity key={unique_img.id} style={loc_styles.item}>
-          <Image
-          source={{uri: unique_img.img}}
-          style = {loc_styles.image}
-          />
-        </TouchableOpacity>
-  )
-  )
-    
+  async componentDidMount(){
+    this.updateView()
+    // // read directory
+    // let main_dir = FileSystem.documentDirectory + "Predictions/"
+
+    // // Check if Predictions dir exists, if not create it
+    // var main_dir_info = await FileSystem.getInfoAsync(main_dir)
+    // if (main_dir_info.exists){
+    //   var directory_content = await FileSystem.readDirectoryAsync(main_dir)
+      
+    //   // make sure that Predictions dir is not empty!
+    //   if (directory_content.length > 0){
+    //     directory_content = directory_content.sort().reverse()
+      
+    //     // here run the loop and extract all images 
+    //     // follow this idea to loop over the views 
+    //     // https://stackoverflow.com/questions/42519800/how-to-loop-and-render-elements-in-react-native
+
+    //     for (var i = 0; i < directory_content.length; i++) {
+    //       var dict = {id : directory_content[i],
+    //               img: main_dir+directory_content[i]+'/Image.jpg',
+    //               diag: await FileSystem.readAsStringAsync(main_dir+directory_content[i]+'/Diagnosis.txt')
+    //             }
+    //       this.state.images_list.push(dict)
+
+    //       this.setState({image_ready: true})
+    //     }
+    //   }
+    // }
+  }
+
+// // CREATE A MAP TO ITERATE
+//  from here: https://stackoverflow.com/questions/42519800/how-to-loop-and-render-elements-in-react-native
+//   buttonsListArr = this.state.images_list.map(unique_img => (
+//     <TouchableOpacity key={unique_img.id} style={loc_styles.item}>
+//           <Image
+//           source={{uri: unique_img.img}}
+//           style = {loc_styles.image}
+//           />
+//         </TouchableOpacity>
+//   )
+//   )
+
   render() {
     return (
       <SafeAreaView style={styles.scroll_container}>
@@ -93,7 +126,20 @@ export default class PreviousScansSreen extends React.Component{
 >
         {this.state.image_ready ? 
         this.state.images_list.map(unique_img => (
-          <TouchableOpacity key={unique_img.id} style={loc_styles.item}>
+          <TouchableOpacity key={unique_img.id} 
+              style={loc_styles.item}
+              onPress = {() => {
+                          AsyncStorage.setItem('history_id', unique_img.id)
+                          // this.setState({ state: this.state })
+                          this.props.navigation.navigate('PreviousScansZoom',
+                          {
+                            onGoBack: () => {
+                              this.updateView()
+                              // this.componentDidMount()
+                            },
+                          }
+                          )
+                          }}>
                 <Image
                 source={{uri: unique_img.img}}
                 style = {loc_styles.image}
@@ -106,7 +152,7 @@ export default class PreviousScansSreen extends React.Component{
                 </Text>
               </TouchableOpacity>))
 
-        : <Text style={{marginTop:100}}>Nothing to show</Text>}
+        : <Text style={{marginTop:100}}>No Diagnosis to show</Text>}
       
       </ScrollView>
 
