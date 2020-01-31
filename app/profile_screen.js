@@ -47,8 +47,11 @@ export default class ProfileScreen extends React.Component{
 
     dialogVisible_allergies : false,
     allergies : null,
-    temp_allergies : null
+    temp_allergies : null,
 
+    dialogVisible_genetic: false,
+    genetic : null,
+    temp_genetic : null,
   };
 
   async componentDidMount() {
@@ -104,7 +107,12 @@ export default class ProfileScreen extends React.Component{
     this.state.age = this.state.temp_age
 
     let fileUri = FileSystem.documentDirectory + "age.txt";
-    await FileSystem.writeAsStringAsync(fileUri, this.state.age.toString(), { encoding: FileSystem.EncodingType.UTF8 });
+    try{
+      await FileSystem.writeAsStringAsync(fileUri, this.state.age.toString(), { encoding: FileSystem.EncodingType.UTF8 });
+    }
+    catch(err){
+      await FileSystem.writeAsStringAsync(fileUri, 'None', { encoding: FileSystem.EncodingType.UTF8 });
+    }
   };
 
 
@@ -124,7 +132,12 @@ export default class ProfileScreen extends React.Component{
     this.state.allergies = this.state.temp_allergies
 
     let fileUri = FileSystem.documentDirectory + "allergies.txt";
-    await FileSystem.writeAsStringAsync(fileUri, this.state.allergies.toString(), { encoding: FileSystem.EncodingType.UTF8 });
+    try{
+      await FileSystem.writeAsStringAsync(fileUri, this.state.allergies.toString(), { encoding: FileSystem.EncodingType.UTF8 });
+    }
+    catch(err){
+      await FileSystem.writeAsStringAsync(fileUri, 'None', { encoding: FileSystem.EncodingType.UTF8 });
+    }
   };
 
 // INFO ABOUT Genetic disorders 
@@ -141,9 +154,19 @@ handleOk_genetic = async () => {
   this.setState({genetic : this.state.temp_genetic})
 
   this.state.genetic = this.state.temp_genetic
+  console.log('temp_genetic', this.state.temp_genetic)
 
   let fileUri = FileSystem.documentDirectory + "genetic.txt";
-  await FileSystem.writeAsStringAsync(fileUri, this.state.genetic.toString(), { encoding: FileSystem.EncodingType.UTF8 });
+  try{
+    console.log('here', this.state.genetic)
+    await FileSystem.writeAsStringAsync(fileUri, this.state.genetic.toString(), { encoding: FileSystem.EncodingType.UTF8 });
+
+  }
+  catch(err){
+    console.log('here111')
+
+    await FileSystem.writeAsStringAsync(fileUri, 'None', { encoding: FileSystem.EncodingType.UTF8 });
+  }
 };
 
 
@@ -160,7 +183,7 @@ handleOk_genetic = async () => {
             {/* <Text style = {loc_styles.category_name}> Birth Day </Text> */}
             
             <TouchableOpacity style={{ backgroundColor:'pink', alignItems: 'flex-end' , justifyContent: 'center', 
-                              position: 'absolute', right:0, height:'100%', width: '100%'}} 
+                              position: 'absolute', right:0, height:'100%', width: '100%', borderRadius: 15}} 
                               onPress= {() => {this.showDialog_age()}}>
 
             <Text style = {loc_styles.category_name}> Birth Day </Text>
@@ -196,7 +219,7 @@ handleOk_genetic = async () => {
             {/* <Text style = {loc_styles.category_name}> Allergies </Text> */}
             
             <TouchableOpacity style={{ backgroundColor:'pink', alignItems: 'flex-end' , justifyContent: 'center', 
-                              position: 'absolute', right:0, height:'100%', width: '100%'}} 
+                              position: 'absolute', right:0, height:'100%', width: '100%', borderRadius: 15}} 
                               onPress= {() => {this.showDialog_allergies()}}>  
             <Text style = {loc_styles.category_name}> Allergies </Text>
             <Text style = {loc_styles.category_answer}> {this.state.allergies ? this.state.allergies : 'None'} </Text>
@@ -229,11 +252,11 @@ handleOk_genetic = async () => {
         {/* ================================ */}
         {/* ================================ */}
 
-        <View style={[styles.button, {marginTop:15}]}>
+        <View style={[styles.button, {marginTop:15,}]}>
             {/* <Text style = {loc_styles.category_name}> Genetic disorders </Text> */}
             
             <TouchableOpacity style={{ backgroundColor:'pink', alignItems: 'flex-end' , justifyContent: 'center', 
-                              position: 'absolute', right:0, height:'100%', width: '100%'}} 
+                              position: 'absolute', right:0, height:'100%', width: '100%', borderRadius: 15}} 
                               onPress= {() => {this.showDialog_genetic()}}>  
             <Text style = {loc_styles.category_name}> Genetic disorders </Text>
 
@@ -251,7 +274,8 @@ handleOk_genetic = async () => {
               <Dialog.Input style={{color:'black'}}
                             autoCapitalize = {"none"} 
                             autoCorrect = {false}  
-              onChangeText={foo => this.setState({temp_genetic: foo})} ></Dialog.Input>
+                            // value={this.state.genetic}
+              onChangeText={gen => this.setState({temp_genetic: gen})} ></Dialog.Input>
             </Dialog.Container>
 
           </View>

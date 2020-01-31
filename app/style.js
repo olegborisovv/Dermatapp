@@ -3,7 +3,7 @@ import { StyleSheet, Dimensions } from 'react-native';
 const screenWidth = Math.round(Dimensions.get('window').width); // for XR:  414
 const screenHeight = Math.round(Dimensions.get('window').height); // for XR: 896
 
-var global_backgroundColor = '#A0FF93'
+var global_backgroundColor = '#E6D3FF'
 
 export default StyleSheet.create({
     container: {
@@ -33,7 +33,8 @@ export default StyleSheet.create({
       // textAlign: 'center', 
       justifyContent: 'center',
       fontSize: screenHeight*0.02,
-      alignItems: 'center'
+      alignItems: 'center',
+      borderRadius: 15
     },
     button_text: {
       fontSize: screenHeight*0.03,

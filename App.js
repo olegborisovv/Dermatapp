@@ -45,6 +45,12 @@ class SignInScreen extends React.Component {
   render() {
     return (
       <View style={styles.container}>
+
+        <Image source={require("./assets/logo1-update.png")}
+          style={{position:'absolute', top:30}}
+          resizeMode ={'center'}
+          />
+          
         <Text style={{fontStyle: 'italic'}}>DEMO VERSION NOTE: </Text>
         <Text>to login to app please type {'\n'}
          in email box: "email"{'\n'}
@@ -56,7 +62,7 @@ class SignInScreen extends React.Component {
           
         <TextInput
           style={styles.text_input_style}
-          placeholder="Type your email"
+          placeholder="Type your email or insurance number"
           onChangeText={email => this.setState({ email })}
           value={this.state.email}
           autoCapitalize = {"none"}
@@ -102,7 +108,7 @@ class HomeScreen extends React.Component {
   };
 
   state = {
-    uv : this.getUVIndex(),
+    uv : 2, //this.getUVIndex(),
     // uv: '',
     colorUV : 'green',
     to_alert: true,
@@ -149,16 +155,68 @@ class HomeScreen extends React.Component {
     // console.log("uv",uv)
     return uv
   }
-
   triggerAlert(){
     // this.setState({to_alert: false}) 
     this.state.to_alert = false
-    alert("UV index is high")    
+    alert("UV index is high\nTap on icon to get more info")    
+  }
+
+  giveUVInfo(){
+    uv = this.state.uv
+
+    var skinDefence ='20'
+    var title = ''
+    var message = ''
+    if (uv<3){
+      title = "UV index is Low (0 to 2)"
+      message = "- Wear sunglasses on bright days.\n\n - If you burn easily, cover\
+up and use broad spectrum SPF 30+ sunscreen. \n\n - Bright surfaces, such as sand, water, and \
+snow, will increase UV exposure."
+    }
+    else if (uv>=3 && uv<6){
+      title = "UV index is Moderate (3 to 5)"
+      message = "- Stay in shade near midday when the Sun is strongest.\
+      \n\n - If outdoors, wear Sun protective clothing, a wide-brimmed hat, and UV-blocking sunglasses.\
+      \n\n - Generously apply broad spectrum SPF 30+ sunscreen every 2 hours, even on cloudy days, and after\
+       swimming or sweating.\n\n - Bright surfaces, such as sand, water, and snow, will increase UV exposure."
+    }
+    else if (uv>=6 && uv<8){
+      title = "UV index is High (6 to 7)"
+      message = "- Reduce time in the Sun between 10 a.m. and 4 p.m.\
+      \n\n - If outdoors, seek shade and wear Sun protective clothing, a wide-brimmed hat, and UV-blocking sunglasses.\
+      \n\n - Generously apply broad spectrum SPF 30+ sunscreen every 2 hours, even on cloudy days, and\
+       after swimming or sweating.\n\n - Bright surfaces, such as sand, water, and snow, will increase UV exposure."
+    }
+    else if (uv>=8 && uv<11){
+      title = "UV index is Very High (8 to 10)"
+      message = "- Reduce time in the Sun between 10 a.m. and 4 p.m.\
+      \n\n - If outdoors, seek shade and wear Sun protective clothing, a wide-brimmed hat, and UV-blocking sunglasses.\
+      \n\n - Generously apply broad spectrum SPF 30+ sunscreen every 2 hours, even on cloudy days, and\
+       after swimming or sweating.\n\n - Bright surfaces, such as sand, water, and snow, will increase UV exposure."
+    }
+    else{
+      title = "UV index is Extreme (11+)"
+      message = "- Reduce time in the Sun between 10 a.m. and 4 p.m.\
+      \n\n - If outdoors, seek shade and wear Sun protective clothing, a wide-brimmed hat, and UV-blocking sunglasses.\
+      \n\n - Generously apply broad spectrum SPF 30+ sunscreen every 2 hours, even on cloudy days, and\
+       after swimming or sweating.\n\n - Bright surfaces, such as sand, water, and snow, will increase UV exposure."
+    }
+    Alert.alert(
+      title,
+      message
+    )
+    
+
   }
 
   render() {
     return (
       <View style={styles.container}>
+
+        <Image source={require("./assets/logo1-update.png")}
+          style={{position:'absolute', top:30}}
+          resizeMode ={'center'}
+        />
 
         <TouchableOpacity 
         style = {styles.button}
@@ -185,8 +243,9 @@ class HomeScreen extends React.Component {
           position: 'absolute',
           top: screenWidth*0.02,
           right: screenWidth*0.02
-                    }} onPress={onPress => {Alert.alert('Disclaimer','The company is not responsible for\
-                     the wrong diagnosis. \n Please consult a doctor in case of a doubt')}} >
+                    }} onPress={onPress => {Alert.alert('Disclaimer','This is not a diganosis\
+                     and is not an exhaustive list. You might have a condition that is not suggested\
+                    here. Please consult a doctor if you are concerned about your health')}} >
 
         <Image source={require("./assets/info_icon.png")} 
            style = {{width: screenWidth*0.125, 
@@ -194,11 +253,11 @@ class HomeScreen extends React.Component {
 
         </TouchableOpacity>
         
-        <View style={{position:'absolute', top:0, left:0, backgroundColor:'black', width: 90, height: 90,
-                      alignItems:'center', justifyContent:'center', opacity:0.5}}>
-        <Text style={{fontSize:30 , color:this.state.colorUV}}> 
+        <TouchableOpacity style={{position:'absolute', top:0, left:0, backgroundColor:'black', width: 90, height: 90, //#4243EE
+                      alignItems:'center', justifyContent:'center', opacity:0.75, borderRadius: 100}} onPress={() => {this.giveUVInfo()}}>
+        <Text style={{fontSize:30 , color:this.state.colorUV, fontWeight:'bold'}}> 
         {this.state.uv} UV </Text>
-        </View>
+        </TouchableOpacity>
         {this.state.uv > 5 && this.state.to_alert  ? this.triggerAlert() : <Text></Text>}
 
         <Button title="Sign out" onPress={this._signOutAsync} />

@@ -178,7 +178,8 @@ const loc_styles = StyleSheet.create({
     width: screenWidth,
     backgroundColor:'pink',
     flexDirection:"row",
-    alignItems:'center'
+    alignItems:'center',
+    borderRadius: 15,
     
   },
 

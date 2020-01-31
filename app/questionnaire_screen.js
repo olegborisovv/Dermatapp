@@ -106,11 +106,11 @@ export default class QuestionScreen extends React.Component{
 
 
         {/* MEDICINE QUESTIONS */}
-        <View style={[loc_styles.button, {marginTop:10, height:100}]}>
+        <View style={[loc_styles.button, {marginTop:10, height:100},]}>
           <Text style={{fontSize:screenHeight*0.02, position:'absolute', top:15}}> Are you taking any Medicine?</Text>
 
           <TouchableOpacity style={{ backgroundColor:'pink', alignItems: 'center', justifyContent: 'center',
-                              position: 'absolute', bottom:0, height:'50%', width: '100%'}} 
+                              position: 'absolute', bottom:0, height:'50%', width: '100%',borderBottomEndRadius: 15}} 
                               onPress= {() => {this.showDialog_med()}}>  
             <Text style = {loc_styles.category_answer}> {this.state.med ? this.state.med : 'Click to enter'} </Text>
             </TouchableOpacity>
@@ -131,8 +131,11 @@ export default class QuestionScreen extends React.Component{
                 onChangeText={med => this.setState({temp_med: med})} ></Dialog.Input>
             </Dialog.Container>
         </View>
-        {/* GO TO THE CAMERA SCREEN BUTTON */}       
-        {/* <Button title="Scan my skin" onPress={() => {this.props.navigation.navigate('Camera')}}/> */}
+
+        <TouchableOpacity style={[loc_styles.button, {marginTop:10}]}>
+          <Text style={loc_styles.category_name}>Tag</Text>
+
+        </TouchableOpacity>
         
 
         </ScrollView>
@@ -161,7 +164,8 @@ const loc_styles = StyleSheet.create({
     // textAlign: 'center', 
     justifyContent: 'center',
     fontSize: screenHeight*0.02,
-    alignItems: 'center'
+    alignItems: 'center',
+    borderRadius: 15
   },
 
   category_answer: {
