@@ -52,8 +52,6 @@ export default class ProfileScreen extends React.Component{
   };
 
   async componentDidMount() {
-    console.log("Inside componentDidMount")
-
     //// Experiments with WORKING WITH FILESYS
     // let fileUri = FileSystem.documentDirectory + "text.txt";
     // await FileSystem.writeAsStringAsync(fileUri, "Hello World", { encoding: FileSystem.EncodingType.UTF8 });
@@ -159,11 +157,13 @@ handleOk_genetic = async () => {
 
                     {/* IMPLEMENTATION OF AGE SCREEN */}
           <View style={[styles.button, {marginTop:5}]}>
-            <Text style = {loc_styles.category_name}> Birth Day </Text>
+            {/* <Text style = {loc_styles.category_name}> Birth Day </Text> */}
             
             <TouchableOpacity style={{ backgroundColor:'pink', alignItems: 'flex-end' , justifyContent: 'center', 
-                              position: 'absolute', right:0, height:'100%', width: '50%'}} 
-                              onPress= {() => {this.showDialog_age()}}>  
+                              position: 'absolute', right:0, height:'100%', width: '100%'}} 
+                              onPress= {() => {this.showDialog_age()}}>
+
+            <Text style = {loc_styles.category_name}> Birth Day </Text>
             <Text style = {loc_styles.category_answer}> {this.state.age ? this.state.age : 'Enter'} </Text>
             </TouchableOpacity>
 
@@ -193,11 +193,12 @@ handleOk_genetic = async () => {
         {/* ================================ */}
 
           <View style={[styles.button, {marginTop:15}]}>
-            <Text style = {loc_styles.category_name}> Allergies </Text>
+            {/* <Text style = {loc_styles.category_name}> Allergies </Text> */}
             
             <TouchableOpacity style={{ backgroundColor:'pink', alignItems: 'flex-end' , justifyContent: 'center', 
-                              position: 'absolute', right:0, height:'100%', width: '50%'}} 
+                              position: 'absolute', right:0, height:'100%', width: '100%'}} 
                               onPress= {() => {this.showDialog_allergies()}}>  
+            <Text style = {loc_styles.category_name}> Allergies </Text>
             <Text style = {loc_styles.category_answer}> {this.state.allergies ? this.state.allergies : 'None'} </Text>
             </TouchableOpacity>
 
@@ -229,11 +230,13 @@ handleOk_genetic = async () => {
         {/* ================================ */}
 
         <View style={[styles.button, {marginTop:15}]}>
-            <Text style = {loc_styles.category_name}> Genetic disorders </Text>
+            {/* <Text style = {loc_styles.category_name}> Genetic disorders </Text> */}
             
             <TouchableOpacity style={{ backgroundColor:'pink', alignItems: 'flex-end' , justifyContent: 'center', 
-                              position: 'absolute', right:0, height:'100%', width: '50%'}} 
+                              position: 'absolute', right:0, height:'100%', width: '100%'}} 
                               onPress= {() => {this.showDialog_genetic()}}>  
+            <Text style = {loc_styles.category_name}> Genetic disorders </Text>
+
             <Text style = {loc_styles.category_answer}> {this.state.genetic ? this.state.genetic : 'None'} </Text>
             </TouchableOpacity>
 

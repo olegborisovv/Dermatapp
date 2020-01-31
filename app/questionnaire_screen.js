@@ -136,7 +136,7 @@ export default class QuestionScreen extends React.Component{
         
 
         </ScrollView>
-        <TouchableOpacity style={[styles.button, {width:'100%'}]}
+        <TouchableOpacity style={[styles.button, {position:'absolute', width:'100%', height:screenHeight*0.1, bottom:0}]}
             onPress={() => {this.props.navigation.navigate('Camera')}}>
           <Text style={styles.button_text}> Scan my skin </Text>
 

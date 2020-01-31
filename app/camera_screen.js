@@ -27,6 +27,7 @@ export default class CameraScreen extends React.Component {
     state = {
       hasCameraPermission: null,
       type: Camera.Constants.Type.back,
+      flash: Camera.Constants.FlashMode.off,
       saved_img: null,
       opacity: 0.7
     };
@@ -65,7 +66,6 @@ export default class CameraScreen extends React.Component {
 
 
           }
-          // await FileSystem.writeAsStringAsync(fileUri, this.state.age.toString(), { encoding: FileSystem.EncodingType.UTF8 });
 
 
           
@@ -86,7 +86,12 @@ export default class CameraScreen extends React.Component {
       } else {
         return (
           <View style={{ flex: 1 }}>
-            <Camera style={{ flex: 1 }} type={this.state.type} ref={(ref) => { this.camera = ref }}>
+            <Camera style={{ flex: 1 }} 
+                    type={this.state.type} 
+                    ref={(ref) => { this.camera = ref }}
+                    autoFocus={Camera.Constants.AutoFocus.on}
+                    flashMode={this.state.flash}
+                    >
               <View
                 style={{
                   flex: 1,
@@ -103,8 +108,8 @@ export default class CameraScreen extends React.Component {
                     justifyContent: 'center',                  
                     alignItems: 'center',
                     position: 'absolute',
-                    bottom: 35,
-                    backgroundColor: 'black',
+                    top: 35,
+                    // backgroundColor: 'black',
                   }}
                   onPress={() => {
                     this.setState({
@@ -114,12 +119,22 @@ export default class CameraScreen extends React.Component {
                           : Camera.Constants.Type.back,
                     });
                   }}>
-                  <Text style={{ fontSize: 18, color: 'white' }}> Flip </Text>
+                  {/* <Text style={{ fontSize: 18, color: 'white' }}> Flip </Text> */}
+                  <Image source={require("../assets/flip.png")} 
+                  style = {{width: screenWidth*0.14, 
+                            height: screenWidth*0.14,
+                            // alignSelf: 'center',
+                            opacity: 0.8}}/>
                 </TouchableOpacity>
+
+                
   
-                <View style = {{alignItems: 'center',justifyContent: 'center', width: screenWidth, backgroundColor: 'white', 
-                    opacity: this.state.opacity, position: 'absolute', top:0}}>
-                  <Text style = {{fontSize: 20, opacity: this.state.opacity}}>Please center complaint area at the aim </Text>
+                <View style = {{alignItems: 'center',justifyContent: 'center', 
+                                width: screenWidth, backgroundColor: 'white', 
+                                opacity: this.state.opacity, position: 'absolute', top:0}}>
+                  <Text style = {{fontSize: 20, opacity: this.state.opacity}}>
+                    Please center complaint area at the aim 
+                  </Text>
                 </View>
   
                 <Image source={require("../assets/aim_green.png")} 
@@ -127,6 +142,23 @@ export default class CameraScreen extends React.Component {
                             height: screenWidth*0.25,
                             alignSelf: 'center',
                             opacity: 0.5}}/>
+
+                
+                <TouchableOpacity style={{position:'absolute', top:35, right:10}}
+                  onPress={() => {
+                    this.setState({
+                      flash:
+                        this.state.flash === Camera.Constants.FlashMode.off
+                          ? Camera.Constants.FlashMode.torch
+                          : Camera.Constants.FlashMode.off,
+                    });}}
+                    >
+                  <Image source={require("../assets/light.png")} 
+                  style = {{width: screenWidth*0.14, 
+                            height: screenWidth*0.14,
+                            // alignSelf: 'center',
+                            opacity: 0.8}}/>
+                </TouchableOpacity>
                 
                 
               
