@@ -97,6 +97,7 @@ export default class PredictionScreen extends React.Component{
     }
   }
 
+  // Once prediction is done we want to save image, prediction and tag
   async saveImagePred(){
     var id = Date.now().toString() // time of when pred is done, i.e. unique identifier
 
@@ -115,6 +116,42 @@ export default class PredictionScreen extends React.Component{
     await FileSystem.copyAsync({from:this.state.image, to: fileUri+'Image.jpg'})
     await FileSystem.writeAsStringAsync(fileUri+'Diagnosis.txt', this.state.predictions[0].className.toString(), 
           { encoding: FileSystem.EncodingType.UTF8 });
+    
+    // Also save the tag: 
+    //  1. First load tag from async storage
+    //  2. Save Image's tag to the Diagnosi's folder in 'Tag.txt'
+    //  3. Update tag-dict
+
+    // 1. Load tag from AsyncStorage
+    var current_tag = await AsyncStorage.getItem('current_tag')
+
+
+    // 2. Save Image's tag to the Diagnosi's folder in 'Tag.txt'
+    await FileSystem.writeAsStringAsync(fileUri+'Tag.txt', current_tag, 
+          { encoding: FileSystem.EncodingType.UTF8 });
+
+    // 3.Update tag-list
+    var tag_dict = await AsyncStorage.getItem('tag_dict')
+    tag_dict = JSON.parse(tag_dict) // convert string to object
+
+
+
+    // check if tag_dict exists
+    if (tag_dict){
+      // if key exists increment by one, if not assign 1
+      tag_dict[current_tag] = (tag_dict[current_tag]+1) || 1 ;
+    }
+    else {
+      // tag_dict = {current_tag:1}
+      tag_dict = {}
+      tag_dict[current_tag] = 1
+    }
+    var tag_dict_str = JSON.stringify(tag_dict)
+    // console.log('tag_dict after update',tag_dict_str)
+    await AsyncStorage.setItem('tag_dict',tag_dict_str)
+    // console.log("Some problem here")
+
+    
 
 }
 

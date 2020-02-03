@@ -14,9 +14,11 @@ import {
   SafeAreaView, 
   ScrollView,
   Switch,
+  AsyncStorage,
 } from 'react-native';
 
 import Dialog from "react-native-dialog";
+import ActionSheet from 'react-native-actionsheet';
 
 
 
@@ -39,9 +41,26 @@ export default class QuestionScreen extends React.Component{
 
     dialogVisible_med : false,
     temp_med : null,
-    med : null
+    med : null,
+
+    tag: null,
+    tag_dict: null,
+    dialogVisible_tag : false,
+    temp_tag : null,
+    tag : null,
   };
 
+  async componentDidMount(){
+    try{
+      var getTagDict = await AsyncStorage.getItem('tag_dict')
+      this.setState({tag_dict: JSON.parse(getTagDict)})
+    }
+    catch(err){
+      console.log(err)
+    }
+  }
+
+  // =======================================
   // INFO ABOUT MED
   showDialog_med() {
     this.setState({ dialogVisible_med: true });
@@ -56,12 +75,57 @@ export default class QuestionScreen extends React.Component{
     this.setState({med : this.state.temp_med})
 
     this.state.med = this.state.temp_med
+  };
 
-    // let fileUri = FileSystem.documentDirectory + "age.txt";
-    // await FileSystem.writeAsStringAsync(fileUri, this.state.age.toString(), { encoding: FileSystem.EncodingType.UTF8 });
+  // =======================================
+  // TAG PART
+  // Showing Action Sheet for tags
+  showActionSheet = () => {
+    //To show the Bottom ActionSheet
+    this.ActionSheet.show();
+  };
+
+  showDialog_tag() {
+    this.setState({ dialogVisible_tag: true });
+  };
+ 
+  handleCancel_tag = () => {
+    this.setState({ dialogVisible_tag: false });
+  };
+
+  handleOk_tag = async () => {
+    this.setState({ dialogVisible_tag: false });
+    this.setState({tag : this.state.temp_tag})
+
+    this.state.tag = this.state.temp_tag
   };
     
+
+  // =======================================
   render() {
+    var tag_dict = this.state.tag_dict;
+    var optionArray = []
+    if (tag_dict){
+      var optionArray = Object.keys(tag_dict)
+
+      if (optionArray.includes('None')){
+        optionArray.splice(optionArray.indexOf('None'),1) // remove None from list
+      }
+      var cancelButtonIdx = optionArray.length + 2
+      var addTagIdx = optionArray.length
+      var removeTagIdx = optionArray.length + 1
+
+    }
+    else{
+      var addTagIdx = 0
+      var cancelButtonIdx = 2
+      var removeTagIdx = 1
+    }
+
+    optionArray.push("Add tag")
+    optionArray.push("Cancel tag")
+    optionArray.push("Cancel")
+    
     return (
       <SafeAreaView style={styles.scroll_container}>
         <ScrollView style={styles.scrollView}>
@@ -132,15 +196,74 @@ export default class QuestionScreen extends React.Component{
             </Dialog.Container>
         </View>
 
-        <TouchableOpacity style={[loc_styles.button, {marginTop:10}]}>
+        <TouchableOpacity style={[loc_styles.button, {marginTop:10, alignItems: 'flex-end'}]}
+          onPress={this.showActionSheet}>
           <Text style={loc_styles.category_name}>Tag</Text>
+          <Text style={[loc_styles.category_answer, {position: 'absolute',
+                      right: 10}]}>
+          {this.state.tag ? this.state.tag : 'None'}
+          </Text>
 
         </TouchableOpacity>
+
+        {/* SHOW ACTION SHEET */}
+        <ActionSheet
+          ref={o => (this.ActionSheet = o)}
+          //Title of the Bottom Sheet
+          title={'Which one do you like ?'}
+          //Options Array to show in bottom sheet
+          options={optionArray}
+          //Define cancel button index in the option array
+          //this will take the cancel option in bottom and will highlight it
+          cancelButtonIndex={cancelButtonIdx}
+          //If you want to highlight any specific option you can use below prop
+          destructiveButtonIndex={removeTagIdx}
+          onPress={index => {
+            //Clicking on the option will give you the index of the option clicked
+            if (index == cancelButtonIdx){}
+            else if (index == addTagIdx){
+              // get dialog menu there
+              this.showDialog_tag()
+            }
+            else if (index == removeTagIdx){
+              // get dialog menu there
+              this.setState({tag:"None"});
+            }
+            else{
+              this.setState({tag:optionArray[index]});
+            }
+          }}
+        />
+
+              <Dialog.Container visible={this.state.dialogVisible_tag}>
+              <Dialog.Title>Enter Tag</Dialog.Title>
+              <Dialog.Description>
+              Please Enter tag for temporal analysis
+              </Dialog.Description>
+              <Dialog.Button label="Ok" onPress={this.handleOk_tag} />
+              <Dialog.Button label="Cancel" onPress={this.handleCancel_tag} />
+              {/* <Dialog.Input onSubmitEditing={(value) => this.setState(value)}/> */}
+              <Dialog.Input 
+                style={{color:'black'}}
+                autoCapitalize = {"none"} 
+                autoCorrect = {false}  
+                onChangeText={tag => this.setState({temp_tag: tag})} ></Dialog.Input>
+            </Dialog.Container>
         
 
         </ScrollView>
         <TouchableOpacity style={[styles.button, {position:'absolute', width:'100%', height:screenHeight*0.1, bottom:0}]}
-            onPress={() => {this.props.navigation.navigate('Camera')}}>
+            onPress={() => {
+              this.props.navigation.navigate('Camera')
+
+              // also save the current tag state in AsyncStorage
+              if (this.state.tag){
+                AsyncStorage.setItem('current_tag', this.state.tag)
+              }
+              else{
+                AsyncStorage.setItem('current_tag', "None")
+              }
+              }}>
           <Text style={styles.button_text}> Scan my skin </Text>
 
         </TouchableOpacity>

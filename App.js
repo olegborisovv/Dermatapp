@@ -127,7 +127,7 @@ class HomeScreen extends React.Component {
   }
 
   getUVcolor(){
-    uv = this.state.uv
+    var uv = this.state.uv
     if (uv<3){
       return 'green'
     }
@@ -162,7 +162,7 @@ class HomeScreen extends React.Component {
   }
 
   giveUVInfo(){
-    uv = this.state.uv
+    var uv = this.state.uv
 
     var skinDefence ='20'
     var title = ''

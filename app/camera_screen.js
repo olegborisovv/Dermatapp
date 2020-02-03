@@ -120,7 +120,7 @@ export default class CameraScreen extends React.Component {
                     });
                   }}>
                   {/* <Text style={{ fontSize: 18, color: 'white' }}> Flip </Text> */}
-                  <Image source={require("../assets/flip.png")} 
+                  <Image source={require("../assets/flip_blue.png")} 
                   style = {{width: screenWidth*0.14, 
                             height: screenWidth*0.14,
                             // alignSelf: 'center',
@@ -153,7 +153,7 @@ export default class CameraScreen extends React.Component {
                           : Camera.Constants.FlashMode.off,
                     });}}
                     >
-                  <Image source={require("../assets/light.png")} 
+                  <Image source={require("../assets/light_blue.png")} 
                   style = {{width: screenWidth*0.14, 
                             height: screenWidth*0.14,
                             // alignSelf: 'center',
@@ -169,7 +169,7 @@ export default class CameraScreen extends React.Component {
                     bottom: 35,
                 }}
                   onPress={() => this.takePicture()}> 
-                <Image source={require("../assets/camera_green.png")} // TODO: search for icon or make one
+                <Image source={require("../assets/camera_blue.png")} // TODO: search for icon or make one
                 style={{width: screenWidth*0.25,
                 height: screenWidth*0.25}} /> 
                 </TouchableOpacity>

@@ -63,7 +63,8 @@ export default class PreviousScansSreen extends React.Component{
         for (var i = 0; i < directory_content.length; i++) {
           var dict = {id : directory_content[i],
                   img: main_dir+directory_content[i]+'/Image.jpg',
-                  diag: await FileSystem.readAsStringAsync(main_dir+directory_content[i]+'/Diagnosis.txt')
+                  diag: await FileSystem.readAsStringAsync(main_dir+directory_content[i]+'/Diagnosis.txt'),
+                  tag: await FileSystem.readAsStringAsync(main_dir+directory_content[i]+'/Tag.txt')
                 }
           this.state.images_list.push(dict)
 
@@ -76,6 +77,9 @@ export default class PreviousScansSreen extends React.Component{
   }
 
   async componentDidMount(){
+    // await AsyncStorage.removeItem("tag_dict")
+    console.log("tag dict",await AsyncStorage.getItem("tag_dict"))
+    // await FileSystem.deleteAsync(FileSystem.documentDirectory + "Predictions/1580729466288")
     this.updateView()
   }
 
@@ -109,6 +113,22 @@ getTimeStamp(UNIX_timestamp){
   return time;
 }
 
+showTag(tag){
+  if (tag!='None'){
+    return (
+      <View style={{backgroundColor:'white', borderRadius:15, width:100, marginLeft:screenWidth*0.2,
+      marginRight:screenWidth*0.4, justifyContent:'center', alignItems:'center', 
+      position:'absolute', bottom:5
+      }}>
+        <Text style={{fontSize:12}}> 
+            Tag: {tag}
+
+        </Text>
+      </View>
+    )
+  }
+}
+
   render() {
     return (
       <SafeAreaView style={styles.scroll_container}>
@@ -135,23 +155,26 @@ getTimeStamp(UNIX_timestamp){
                 source={{uri: unique_img.img}}
                 style = {loc_styles.image}
                 />
-                <View style={{height:"100%", justifyContent:'center'}}>
-                <Text style={{fontSize:12, 
-                  marginLeft:screenWidth*0.2,
-                  marginRight:screenWidth*0.3,
-                  position:'absolute',
-                  top:10,
-                  fontStyle:"italic"
+                <View style={{height:"100%", width:'100%', justifyContent:'center', alignItems:'center'}}>
+                  <Text style={{fontSize:12, 
+                    // marginLeft:screenWidth*0.2,
+                    // marginRight:screenWidth*0.3,
+                    position:'absolute',
+                    top:10,
+                    fontStyle:"italic"
+                    
+                    }}>
+                  {this.getTimeStamp(unique_img.id)}
+                  </Text>
+                  <Text style={{fontSize:20, 
+                    marginLeft:screenWidth*0.2,
+                    marginRight:screenWidth*0.4}}> 
+                    
+                    {unique_img.diag}
+                  </Text>
                   
-                  }}>
-                {this.getTimeStamp(unique_img.id)}
-                </Text>
-                <Text style={{fontSize:20, 
-                  marginLeft:screenWidth*0.2,
-                  marginRight:screenWidth*0.4}}> 
-                  
-                  {unique_img.diag}
-                </Text>
+                  {this.showTag(unique_img.tag)}
+
                 </View>
               </TouchableOpacity>))
 
@@ -175,7 +198,7 @@ const loc_styles = StyleSheet.create({
   item: {
     marginTop : 10,
     height: screenWidth*0.3,
-    width: screenWidth,
+    width: "100%",
     backgroundColor:'pink',
     flexDirection:"row",
     alignItems:'center',

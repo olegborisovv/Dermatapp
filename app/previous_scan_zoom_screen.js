@@ -36,6 +36,7 @@ export default class PreviousScansZoomScreen extends React.Component{
     img_uri : null,
     diag: null,
     file_dir : null,
+    tag: null,
 
     img_ready: false,
 
@@ -51,6 +52,9 @@ export default class PreviousScansZoomScreen extends React.Component{
     // read img and diagnosis
     this.setState({img_uri: file_dir+'/Image.jpg'})
     this.setState({diag: await FileSystem.readAsStringAsync(file_dir+'/Diagnosis.txt')})
+
+    // read img tag
+    this.setState({tag: await FileSystem.readAsStringAsync(file_dir+'/Tag.txt')})
 
     // say that we are ready to render
     this.setState({img_ready:true})
@@ -70,6 +74,19 @@ export default class PreviousScansZoomScreen extends React.Component{
   handleDelete = async () => {
     this.setState({ dialogVisible: false });
 
+    // DECREASE counter in AsyncStorage for tag_dict
+    // first load and parse
+    var getTagDict = await AsyncStorage.getItem('tag_dict')
+    var tag_dict = JSON.parse(getTagDict)
+    if (tag_dict[this.state.tag] == 1){
+      delete tag_dict[this.state.tag]
+    }
+    else{
+      tag_dict[this.state.tag] = tag_dict[this.state.tag] - 1
+    }
+    await AsyncStorage.setItem('tag_dict',JSON.stringify(tag_dict))
+
+    // Delete local files
     await FileSystem.deleteAsync(this.state.file_dir)  
     await this.props.navigation.state.params.onGoBack() 
     this.props.navigation.goBack()
