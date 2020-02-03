@@ -94,7 +94,7 @@ export default StyleSheet.create({
       minHeight: 0.15*screenHeight,
       width: screenWidth*0.95,
       // fontSize: screenHeight*0.02,
-      backgroundColor: "#B2FFE7",
+      backgroundColor: "#F9F4FF",
       // textAlign: 'center', 
       justifyContent: 'center',
       fontSize: screenHeight*0.02,

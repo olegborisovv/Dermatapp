@@ -16,11 +16,13 @@ import {
 } from 'react-native';
 
 import CameraScreen from './app/camera_screen'
-import PredictionScreen from './app/prediction_screen'
+import PredictionScreen from './app/prediction_screen' // classifier of Mobile net
+// import PredictionScreen from './app/prediction_screen_speedup' //Please note usage of speed up version
 import ProfileScreen from './app/profile_screen'
 import PreviousScansSreen from './app/previous_scans_screen'
 import QuestionScreen from './app/questionnaire_screen'
 import PreviousScansZoomScreen from './app/previous_scan_zoom_screen'
+import SettingsScreen from './app/setting_screen'
 
 import styles from './app/style'
 
@@ -219,7 +221,7 @@ snow, will increase UV exposure."
         />
 
         <TouchableOpacity 
-        style = {styles.button}
+        style = {[styles.button, {marginTop : 45}]}
         onPress={this._questNav}>
           <Text style={styles.button_text}> Scan my skin  🔍</Text>
         </TouchableOpacity>
@@ -236,6 +238,12 @@ snow, will increase UV exposure."
           <Text style={styles.button_text}> My Profile  📋</Text>
         </TouchableOpacity>
 
+        <TouchableOpacity 
+        style = {[styles.button, {marginTop : 15}]}
+        onPress={onPress => {this.props.navigation.navigate('Settings')}} > 
+          <Text style={styles.button_text}> Settings  ⚙️</Text>
+        </TouchableOpacity>
+
 
         <TouchableOpacity 
         style = {{width: screenWidth*0.125, 
@@ -244,7 +252,7 @@ snow, will increase UV exposure."
           top: screenWidth*0.02,
           right: screenWidth*0.02
                     }} onPress={onPress => {Alert.alert('Disclaimer','This is not a diganosis\
-                     and is not an exhaustive list. You might have a condition that is not suggested\
+and is not an exhaustive list. You might have a condition that is not suggested\
                     here. Please consult a doctor if you are concerned about your health')}} >
 
         <Image source={require("./assets/info_icon.png")} 
@@ -256,7 +264,7 @@ snow, will increase UV exposure."
         <TouchableOpacity style={{position:'absolute', top:0, left:0, backgroundColor:'black', width: 90, height: 90, //#4243EE
                       alignItems:'center', justifyContent:'center', opacity:0.75, borderRadius: 100}} onPress={() => {this.giveUVInfo()}}>
         <Text style={{fontSize:30 , color:this.state.colorUV, fontWeight:'bold'}}> 
-        {this.state.uv} UV </Text>
+        {this.state.uv} UV</Text>
         </TouchableOpacity>
         {this.state.uv > 5 && this.state.to_alert  ? this.triggerAlert() : <Text></Text>}
 
@@ -315,6 +323,7 @@ const AppStack = createStackNavigator({ Home: HomeScreen,
   PreviousScans: PreviousScansSreen,
   PreviousScansZoom: PreviousScansZoomScreen,
   Questionnaire: QuestionScreen,
+  Settings: SettingsScreen,
 });
 
 const AuthStack = createStackNavigator({ SignIn: SignInScreen });

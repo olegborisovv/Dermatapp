@@ -15,10 +15,13 @@ import {
   ScrollView,
   Switch,
   AsyncStorage,
+  Slider,
 } from 'react-native';
 
 import Dialog from "react-native-dialog";
 import ActionSheet from 'react-native-actionsheet';
+
+// import { Slider } from 'react-native-elements';
 
 
 
@@ -48,6 +51,8 @@ export default class QuestionScreen extends React.Component{
     dialogVisible_tag : false,
     temp_tag : null,
     tag : null,
+
+    sliderValue:0
   };
 
   async componentDidMount(){
@@ -140,8 +145,8 @@ export default class QuestionScreen extends React.Component{
         </View>
 
         {/* SWITCHES */}
-        <View style={[loc_styles.button, {marginTop:10, fontSize:10, backgroundColor:"#ff4d00"}]}>
-          <Text style={[loc_styles.category_name,{fontSize:screenHeight*0.015}]}>USE SYMPTOMS FOR ANALYSIS</Text>
+        <View style={[loc_styles.button, {marginTop:10, backgroundColor:"#ff4d00"}]}>
+          <Text style={[loc_styles.category_name,{fontWeight:'bold', fontSize:screenHeight*0.015}]}>USE SYMPTOMS FOR ANALYSIS</Text>
           <Switch style = {{position:'absolute', right:10}}
           value={this.state.use_questionnaire} 
           onValueChange={v => {this.setState({use_questionnaire:v})}} />
@@ -162,10 +167,17 @@ export default class QuestionScreen extends React.Component{
         </View>
 
         <View style={[loc_styles.button, {marginTop:10}]}>
-          <Text style={loc_styles.category_name}>Painful</Text>
-          <Switch style = {{position:'absolute', right:10}}
-          value={this.state.pain} 
-          onValueChange={v => {this.setState({pain:v})}} />
+          {/* <View style={{alignItems:'center', width:'100%'}}> */}
+          <Text style={{marginTop:5,fontSize:screenHeight*0.025}}> Painful: {this.state.sliderValue} </Text>
+          {/* </View> */}
+          <View style={{flex: 1, alignItems: 'stretch', width:'85%'}}>
+            <Slider
+              step={1}
+              maximumValue={5}
+                value={this.state.sliderValue}
+                onValueChange={value => this.setState({sliderValue: value})}
+              />
+          </View>
         </View>
 
 
@@ -173,7 +185,7 @@ export default class QuestionScreen extends React.Component{
         <View style={[loc_styles.button, {marginTop:10, height:100},]}>
           <Text style={{fontSize:screenHeight*0.02, position:'absolute', top:15}}> Are you taking any Medicine?</Text>
 
-          <TouchableOpacity style={{ backgroundColor:'pink', alignItems: 'center', justifyContent: 'center',
+          <TouchableOpacity style={{ backgroundColor:'pink', borderRadius:15, alignItems: 'center', justifyContent: 'center',
                               position: 'absolute', bottom:0, height:'50%', width: '100%',borderBottomEndRadius: 15}} 
                               onPress= {() => {this.showDialog_med()}}>  
             <Text style = {loc_styles.category_answer}> {this.state.med ? this.state.med : 'Click to enter'} </Text>
@@ -210,7 +222,7 @@ export default class QuestionScreen extends React.Component{
         <ActionSheet
           ref={o => (this.ActionSheet = o)}
           //Title of the Bottom Sheet
-          title={'Which one do you like ?'}
+          title={'Please choose a tag'}
           //Options Array to show in bottom sheet
           options={optionArray}
           //Define cancel button index in the option array
@@ -283,7 +295,7 @@ const loc_styles = StyleSheet.create({
     minHeight: 0.07*screenHeight,
     width: 0.9*screenWidth,
     // fontSize: screenHeight*0.02,
-    backgroundColor: "#B2FFE7",
+    backgroundColor: "#F9F4FF",
     // textAlign: 'center', 
     justifyContent: 'center',
     fontSize: screenHeight*0.02,

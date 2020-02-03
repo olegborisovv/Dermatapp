@@ -123,7 +123,12 @@ export default class PreviousScansZoomScreen extends React.Component{
 
         <View style={styles.diagnosis}>
           <Text style={{fontSize:screenHeight*0.02, textDecorationLine:'underline'}}> Diagnosis:</Text>
-          <Text style={{fontSize:screenHeight*0.02, marginTop:5, fontWeight:'bold'}}>{this.state.diag}</Text>
+          <Text style={{fontSize:screenHeight*0.02, marginTop:5, fontWeight:'bold'}}>
+            {this.state.diag.split('\n')[0]}
+          </Text>
+          <Text style={{fontSize:screenHeight*0.015, marginTop:5, fontStyle:'italic'}}>
+            Certainty: {this.state.diag.split('\n')[1]}
+          </Text>
         </View>
         
         {/* GO BACK SCREEN */}

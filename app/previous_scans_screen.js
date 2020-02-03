@@ -78,6 +78,7 @@ export default class PreviousScansSreen extends React.Component{
 
   async componentDidMount(){
     // await AsyncStorage.removeItem("tag_dict")
+    // await AsyncStorage.setItem('tag_dict',JSON.stringify({tag1:1, Tag2:1}))
     console.log("tag dict",await AsyncStorage.getItem("tag_dict"))
     // await FileSystem.deleteAsync(FileSystem.documentDirectory + "Predictions/1580729466288")
     this.updateView()
@@ -116,7 +117,7 @@ getTimeStamp(UNIX_timestamp){
 showTag(tag){
   if (tag!='None'){
     return (
-      <View style={{backgroundColor:'white', borderRadius:15, width:100, marginLeft:screenWidth*0.2,
+      <View style={{backgroundColor:'#B171FD', borderRadius:15, width:120, marginLeft:screenWidth*0.2,
       marginRight:screenWidth*0.4, justifyContent:'center', alignItems:'center', 
       position:'absolute', bottom:5
       }}>
@@ -170,7 +171,14 @@ showTag(tag){
                     marginLeft:screenWidth*0.2,
                     marginRight:screenWidth*0.4}}> 
                     
-                    {unique_img.diag}
+                    {unique_img.diag.split('\n')[0]}
+                  </Text>
+                  <Text style={{fontSize:15, 
+                    marginLeft:screenWidth*0.2,
+                    marginRight:screenWidth*0.4,
+                    fontStyle:'italic'}}> 
+                    
+                    Certainty: {unique_img.diag.split('\n')[1]}
                   </Text>
                   
                   {this.showTag(unique_img.tag)}
@@ -199,7 +207,7 @@ const loc_styles = StyleSheet.create({
     marginTop : 10,
     height: screenWidth*0.3,
     width: "100%",
-    backgroundColor:'pink',
+    backgroundColor: '#F9F4FF' ,//'pink',
     flexDirection:"row",
     alignItems:'center',
     borderRadius: 15,
