@@ -106,7 +106,6 @@ getTimeStamp(UNIX_timestamp){
   var hour = a.getHours();
   var min = a.getMinutes();
   var sec = a.getSeconds();
-  // var time = date + ' ' + month + ' ' + year + ' ' + hour + ':' + min + ':' + sec ;
   if (min.toString().length==1){
     min = '0'+min.toString()
   }
@@ -117,9 +116,8 @@ getTimeStamp(UNIX_timestamp){
 showTag(tag){
   if (tag!='None'){
     return (
-      <View style={{backgroundColor:'#B171FD', borderRadius:15, width:120, marginLeft:screenWidth*0.2,
-      marginRight:screenWidth*0.4, justifyContent:'center', alignItems:'center', 
-      position:'absolute', bottom:5
+      <View style={{backgroundColor:'#B171FD', borderRadius:15, width:120, justifyContent:'center', alignItems:'center', 
+      position:'absolute', bottom:5, right: 5,
       }}>
         <Text style={{fontSize:12}}> 
             Tag: {tag}
@@ -156,26 +154,29 @@ showTag(tag){
                 source={{uri: unique_img.img}}
                 style = {loc_styles.image}
                 />
-                <View style={{height:"100%", width:'100%', justifyContent:'center', alignItems:'center'}}>
+                <View style={{height:"100%", width:'65%', justifyContent:'center', alignItems:'center'}}>
                   <Text style={{fontSize:12, 
                     // marginLeft:screenWidth*0.2,
                     // marginRight:screenWidth*0.3,
                     position:'absolute',
                     top:10,
+                    right:0,
                     fontStyle:"italic"
                     
                     }}>
                   {this.getTimeStamp(unique_img.id)}
                   </Text>
+
                   <Text style={{fontSize:20, 
-                    marginLeft:screenWidth*0.2,
-                    marginRight:screenWidth*0.4}}> 
+                    // marginLeft:screenWidth*0.2,
+                    // marginRight:screenWidth*0.4
+                    }}> 
                     
                     {unique_img.diag.split('\n')[0]}
                   </Text>
                   <Text style={{fontSize:15, 
-                    marginLeft:screenWidth*0.2,
-                    marginRight:screenWidth*0.4,
+                    // marginLeft:screenWidth*0.2,
+                    // marginRight:screenWidth*0.4,
                     fontStyle:'italic'}}> 
                     
                     Certainty: {unique_img.diag.split('\n')[1]}

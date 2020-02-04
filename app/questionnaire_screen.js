@@ -16,6 +16,7 @@ import {
   Switch,
   AsyncStorage,
   Slider,
+  Image,
 } from 'react-native';
 
 import Dialog from "react-native-dialog";
@@ -208,15 +209,30 @@ export default class QuestionScreen extends React.Component{
             </Dialog.Container>
         </View>
 
-        <TouchableOpacity style={[loc_styles.button, {marginTop:10, alignItems: 'flex-end'}]}
-          onPress={this.showActionSheet}>
-          <Text style={loc_styles.category_name}>Tag</Text>
-          <Text style={[loc_styles.category_answer, {position: 'absolute',
-                      right: 10}]}>
-          {this.state.tag ? this.state.tag : 'None'}
-          </Text>
+        <View style={[loc_styles.button, {marginTop:10}]}>
+        
+          <TouchableOpacity style={[loc_styles.button, {alignItems: 'flex-end'}]}
+            onPress={this.showActionSheet}>
+            <Text style={loc_styles.category_name}>Tag</Text>
+            <Text style={[loc_styles.category_answer, {position: 'absolute',
+                        right: 10}]}>
+            {this.state.tag ? this.state.tag : 'None'}
+            </Text>
 
-        </TouchableOpacity>
+          </TouchableOpacity>
+          <TouchableOpacity style = {{position:'absolute', left:60}}
+                            onPress={()=>{Alert.alert("Info about Tag",
+                            "Setting up a tag allows you to keep track of the temporal development of\
+                            skin defect.")}}>
+
+            <Image source={require("../assets/info_icon.png")} 
+                          style = {{width: screenWidth*0.06,
+                            marginTop: 5, 
+                            height: screenWidth*0.06,
+                            // alignSelf: 'center',
+                            opacity: 0.8}}/>
+          </TouchableOpacity>
+        </View>
 
         {/* SHOW ACTION SHEET */}
         <ActionSheet

@@ -134,7 +134,7 @@ const loc_styles = StyleSheet.create({
   category_name: {
     fontSize: screenHeight*0.015,
     position: 'absolute',
-    left: 20
+    left: 10
   },  
   button: {
     minHeight: 0.07*screenHeight,

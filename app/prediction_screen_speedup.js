@@ -11,8 +11,10 @@ import {
   Dimensions,
   TouchableOpacity,
   Text,
-  Image
+  Image,
 } from 'react-native';
+
+import Constants from 'expo-constants';
 
 import { assert } from '@tensorflow/tfjs-core/dist/util';
 import * as tf from '@tensorflow/tfjs';
@@ -81,10 +83,20 @@ export default class PredictionScreen extends React.Component{
   modelClassify(img){
     // TODO: FOR DEMO we can do sth here (i.e. saying that model doesnt work correctly)
     // in such a case we can output some disease value
-    var max = 1
-    var min = 0.6
-    var random = Math.random() * (+max - +min) + +min
-    return [{className:"No Disease", probability:random}]
+    if (Constants.isDevice){
+      var max = 1
+      var min = 0.7
+      var random = Math.random() * (+max - +min) + +min
+      return [{className:"No Disease", probability:random}]
+    }
+    else{
+      var disieases_list = ["melanoma", "melanocytic nevi"] //"vascular lesions", "dermatofibroma", "Actinic keratoses"
+      var max = 0.7
+      var min = 0.5
+      var random = Math.random() * (+max - +min) + +min
+      
+      return [{className:disieases_list[Math.floor(Math.random() * disieases_list.length)], probability:random}]
+    }
   }
 
   classifyImage = async () => {
@@ -101,7 +113,7 @@ export default class PredictionScreen extends React.Component{
 
       var predictions = this.modelClassify(imageTensor)
 
-      setTimeout(() => {this.setState({ predictions })}, 10000)
+      setTimeout(() => {this.setState({ predictions })}, 1000)
       console.log(predictions)
 
     } catch (error) {
@@ -199,7 +211,8 @@ export default class PredictionScreen extends React.Component{
     return(
       <View style={{alignSelf: 'center',
                   position: 'absolute',
-                  bottom: screenHeight*0.17,}}>
+                  bottom: screenHeight*0.16,
+                  }}>
       <TouchableOpacity style= {styles.button} onPress= {() => this.loadMLmodel()}>
         <Text style = {styles.button_text}>
             Process Picture

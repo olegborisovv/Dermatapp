@@ -16,8 +16,8 @@ import {
 } from 'react-native';
 
 import CameraScreen from './app/camera_screen'
-import PredictionScreen from './app/prediction_screen' // classifier of Mobile net
-// import PredictionScreen from './app/prediction_screen_speedup' //Please note usage of speed up version
+// import PredictionScreen from './app/prediction_screen' // classifier of Mobile net
+import PredictionScreen from './app/prediction_screen_speedup' //Please note usage of speed up version
 import ProfileScreen from './app/profile_screen'
 import PreviousScansSreen from './app/previous_scans_screen'
 import QuestionScreen from './app/questionnaire_screen'
@@ -267,8 +267,11 @@ and is not an exhaustive list. You might have a condition that is not suggested\
         {this.state.uv} UV</Text>
         </TouchableOpacity>
         {this.state.uv > 5 && this.state.to_alert  ? this.triggerAlert() : <Text></Text>}
-
-        <Button title="Sign out" onPress={this._signOutAsync} />
+        <View style={{alignSelf: 'center',
+                          position: 'absolute',
+                          bottom: "4%",}}>
+          <Button title="Sign out" onPress={this._signOutAsync} />
+        </View>
       </View>
     );
   }

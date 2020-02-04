@@ -182,7 +182,7 @@ handleOk_genetic = async () => {
           <View style={[styles.button, {marginTop:5}]}>
             {/* <Text style = {loc_styles.category_name}> Birth Day </Text> */}
             
-            <TouchableOpacity style={{ backgroundColor:'pink', alignItems: 'flex-end' , justifyContent: 'center', 
+            <TouchableOpacity style={{ backgroundColor:'#F9F4FF', alignItems: 'flex-end' , justifyContent: 'center', 
                               position: 'absolute', right:0, height:'100%', width: '100%', borderRadius: 15}} 
                               onPress= {() => {this.showDialog_age()}}>
 
@@ -218,7 +218,7 @@ handleOk_genetic = async () => {
           <View style={[styles.button, {marginTop:15}]}>
             {/* <Text style = {loc_styles.category_name}> Allergies </Text> */}
             
-            <TouchableOpacity style={{ backgroundColor:'pink', alignItems: 'flex-end' , justifyContent: 'center', 
+            <TouchableOpacity style={{ backgroundColor:'#F9F4FF', alignItems: 'flex-end' , justifyContent: 'center', 
                               position: 'absolute', right:0, height:'100%', width: '100%', borderRadius: 15}} 
                               onPress= {() => {this.showDialog_allergies()}}>  
             <Text style = {loc_styles.category_name}> Allergies </Text>
@@ -255,7 +255,7 @@ handleOk_genetic = async () => {
         <View style={[styles.button, {marginTop:15,}]}>
             {/* <Text style = {loc_styles.category_name}> Genetic disorders </Text> */}
             
-            <TouchableOpacity style={{ backgroundColor:'pink', alignItems: 'flex-end' , justifyContent: 'center', 
+            <TouchableOpacity style={{ backgroundColor:'#F9F4FF', alignItems: 'flex-end' , justifyContent: 'center', 
                               position: 'absolute', right:0, height:'100%', width: '100%', borderRadius: 15}} 
                               onPress= {() => {this.showDialog_genetic()}}>  
             <Text style = {loc_styles.category_name}> Genetic disorders </Text>
