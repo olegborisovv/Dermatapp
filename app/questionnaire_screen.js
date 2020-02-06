@@ -213,17 +213,22 @@ export default class QuestionScreen extends React.Component{
         
           <TouchableOpacity style={[loc_styles.button, {alignItems: 'flex-end'}]}
             onPress={this.showActionSheet}>
-            <Text style={loc_styles.category_name}>Tag</Text>
+            <Text style={loc_styles.category_name}>Skin Tag</Text>
             <Text style={[loc_styles.category_answer, {position: 'absolute',
                         right: 10}]}>
             {this.state.tag ? this.state.tag : 'None'}
             </Text>
 
           </TouchableOpacity>
-          <TouchableOpacity style = {{position:'absolute', left:60}}
-                            onPress={()=>{Alert.alert("Info about Tag",
-                            "Setting up a tag allows you to keep track of the temporal development of\
-                            skin defect.")}}>
+          <TouchableOpacity style = {{//marginLeft:10,
+            position:'absolute', left:screenHeight*0.12//0.22
+          }}
+                            onPress={()=>{Alert.alert("Info about Skin Tag",
+                            "Setting up a Skin Tag allows the app to keep track of the temporal development of\
+ skin defect, and thus make more informed prediction taking into consideration previous scans.\
+ \n\nPlease make sure to create a unique Skin Tag for every new skin area that you are scanning.\
+ \n\nActive Skin Tags will be displayed for your convenience.\
+ \n\nYou are not reqiured to provide a tag!")}}>
 
             <Image source={require("../assets/info_icon.png")} 
                           style = {{width: screenWidth*0.06,

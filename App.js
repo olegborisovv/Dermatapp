@@ -31,7 +31,7 @@ import { createStackNavigator } from 'react-navigation-stack';
 
 const screenWidth = Math.round(Dimensions.get('window').width); // for XR:  414
 const screenHeight = Math.round(Dimensions.get('window').height); // for XR: 896
-const login_password = {"email":"password", '':''}; // we can remove last element for demo
+const login_password = {"email":"password", '':'', '12345678':'kpmgic', 'joe.smith@gmail.com':'kpmgic'}; // we can remove last element for demo
 
 // ================== SIGN IN SCREEN
 
@@ -55,10 +55,10 @@ class SignInScreen extends React.Component {
           
         <Text style={{fontStyle: 'italic'}}>DEMO VERSION NOTE: </Text>
         <Text>to login to app please type {'\n'}
-         in email box: "email"{'\n'}
-         in password box: "password"
+         in email box: "joe.smith@gmail.com"{'\n'}
+         in password box: "kpmgic"
          </Text>
-         <Text style={{fontStyle: 'italic'}}>OR LEAVE TWO FIELDS EMPTY </Text>
+         {/* <Text style={{fontStyle: 'italic'}}>OR LEAVE TWO FIELDS EMPTY </Text> */}
        
         
           
@@ -216,7 +216,7 @@ snow, will increase UV exposure."
       <View style={styles.container}>
 
         <Image source={require("./assets/logo1-update.png")}
-          style={{position:'absolute', top:30}}
+          style={{position:'absolute', top:45}}
           resizeMode ={'center'}
         />
 

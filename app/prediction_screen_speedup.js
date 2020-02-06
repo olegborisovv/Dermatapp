@@ -101,7 +101,9 @@ export default class PredictionScreen extends React.Component{
 
   classifyImage = async () => {
     try {
-      const response = await fetch(this.state.image, {}, { isBinary: true })
+      const response = await fetch(this.state.image, {}, { isBinary: true }) // android has problem here
+      // const response = await fetch(this.state.image) // android has problem here
+
 
       const rawImageData = await response.arrayBuffer()
       
@@ -179,17 +181,34 @@ export default class PredictionScreen extends React.Component{
 
 }
 
+  getCertaintyColor(probability){
+    if (probability>0.875){
+      return '#45FF47'
+    }
+    else if (probability>0.75 && probability<=0.875){
+      return 'orange'
+    }
+    else{
+      return 'red'
+    }
+  }
+
   renderPrediction(prediction){
     this.saveImagePred()
     return (
-      <View>
+      <View style={{alignItems:'center'}}>
         <Text style={[styles.text, {fontSize: screenHeight*0.02, fontWeight:"bold"}]}>
           {prediction.className}
         </Text>
+        <View style={{flexDirection:'row'}}>
         <Text style={[styles.text, 
-          {fontSize: screenHeight*0.015, fontStyle:'italic', marginTop:5}]}>
+          {fontSize: screenHeight*0.015, fontStyle:'italic', marginTop:5, 
+            }]}>
         {'Certainty: '}{Math.floor(prediction.probability*100)}{"%"}
         </Text>
+        <View style={{height:screenHeight*0.02, width:screenHeight*0.02, marginLeft: 10,
+          backgroundColor:this.getCertaintyColor(prediction.probability), borderRadius:100}}/>
+        </View>
       </View>
     )
 
@@ -264,25 +283,35 @@ export default class PredictionScreen extends React.Component{
       {this.state.start_predict ? 
       <View style={[styles.diagnosis, {flexDirection: 'column',
       position: 'relative',
-      top: screenHeight*0.2,}]}>
+      top: screenHeight*0.18,}]}>
           {this.state.image && (
             <Text style={{fontSize : screenHeight*0.02, textDecorationLine:'underline'}}>
-              Diagnosis: {this.state.predictions ? '' : (<ActivityIndicator size='small' />)}
+              Diagnosis: {this.state.predictions ? '' : <ActivityIndicator size='small' /> //works for iOS, crashes android
+                // <View style={{width:50, height:50, position:'absolute', backgroundColor:'black'}}>
+                //   <ActivityIndicator size='small' />
+                // </View>
+                }
             </Text>
           )}
           {this.state.isModelReady &&
             this.state.predictions ?
             this.renderPrediction(this.state.predictions[0]) : <Text></Text>
-
-            // [this.state.predictions[0]].map(p => this.renderPrediction(p))
-
             }
-        </View> :  <Text> </Text>}
+        </View> :  <Text></Text>}
+
+      {this.state.predictions ? 
+      <View style={{alignSelf: 'center',
+                  position: 'absolute',
+                  bottom: "12%",
+                  }}>
+        <Button title="Scan Again" onPress= {() => this.props.navigation.navigate('Camera')}/>
+      </View> :  <View></View>
+      }
 
       <View style={{alignSelf: 'center',
                   position: 'absolute',
                   bottom: "4%",}}>
-      <Button title="Home" onPress= {() => this.props.navigation.navigate('Home')}/>
+        <Button title="Home" onPress= {() => this.props.navigation.navigate('Home')}/>
       </View>
 
 
