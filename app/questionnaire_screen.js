@@ -110,6 +110,7 @@ export default class QuestionScreen extends React.Component{
   // =======================================
   render() {
     var tag_dict = this.state.tag_dict;
+    var suggestedList = ['Left Hand', 'Right Hand', 'Left Leg', 'Right Leg', 'Upper Body']
     var optionArray = []
     if (tag_dict){
       var optionArray = Object.keys(tag_dict)
@@ -117,19 +118,30 @@ export default class QuestionScreen extends React.Component{
       if (optionArray.includes('None')){
         optionArray.splice(optionArray.indexOf('None'),1) // remove None from list
       }
-      var cancelButtonIdx = optionArray.length + 2
-      var addTagIdx = optionArray.length
-      var removeTagIdx = optionArray.length + 1
+      var cancelButtonIdx = optionArray.length+suggestedList.length + 2
+      var addTagIdx = optionArray.length+ suggestedList.length
+      var removeTagIdx = optionArray.length+ suggestedList.length + 1
 
     }
     else{
-      var addTagIdx = 0
-      var cancelButtonIdx = 2
-      var removeTagIdx = 1
+      var cancelButtonIdx = suggestedList.length+2
+      var addTagIdx = suggestedList.length
+      var removeTagIdx = suggestedList.length+1
     }
 
-    optionArray.push("Add tag")
-    optionArray.push("Cancel tag")
+    for(var i=0;i<suggestedList.length;i++){
+      if (optionArray.includes(suggestedList[i])==false){
+        optionArray.push(suggestedList[i])
+      }
+      else{
+        cancelButtonIdx-=1
+        addTagIdx -=1
+        removeTagIdx -=1
+      }
+    }
+
+    optionArray.push("ADD TAG")
+    optionArray.push("Cancel Tag")
     optionArray.push("Cancel")
     
     return (
@@ -227,7 +239,6 @@ export default class QuestionScreen extends React.Component{
                             "Setting up a Skin Tag allows the app to keep track of the temporal development of\
  skin defect, and thus make more informed prediction taking into consideration previous scans.\
  \n\nPlease make sure to create a unique Skin Tag for every new skin area that you are scanning.\
- \n\nActive Skin Tags will be displayed for your convenience.\
  \n\nYou are not reqiured to provide a tag!")}}>
 
             <Image source={require("../assets/info_icon.png")} 

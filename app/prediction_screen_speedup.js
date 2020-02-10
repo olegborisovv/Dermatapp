@@ -87,7 +87,7 @@ export default class PredictionScreen extends React.Component{
       var max = 1
       var min = 0.7
       var random = Math.random() * (+max - +min) + +min
-      return [{className:"No Disease", probability:random}]
+      return [{className:"No Disease Detected", probability:random}]
     }
     else{
       var disieases_list = ["melanoma", "melanocytic nevi"] //"vascular lesions", "dermatofibroma", "Actinic keratoses"
@@ -193,6 +193,25 @@ export default class PredictionScreen extends React.Component{
     }
   }
 
+  suggestionMessage(diagnosis, certainty){
+    if (diagnosis == 'No Disease Detected' ){
+      if (certainty>0.8){
+        return 'Nothing to worry about'
+      }
+      else{
+        return 'Please scan again.\nOr ask a doctor'
+      }
+    }
+    else{
+      if (certainty>0.8){
+        return 'Please set up an appoitment with doctor'
+      }
+      else{
+        return 'Please scan again.\nOr ask a doctor'
+      }
+    }
+  }
+
   renderPrediction(prediction){
     this.saveImagePred()
     return (
@@ -200,15 +219,19 @@ export default class PredictionScreen extends React.Component{
         <Text style={[styles.text, {fontSize: screenHeight*0.02, fontWeight:"bold"}]}>
           {prediction.className}
         </Text>
-        <View style={{flexDirection:'row'}}>
+        {/* <View style={{flexDirection:'row'}}> */}
         <Text style={[styles.text, 
           {fontSize: screenHeight*0.015, fontStyle:'italic', marginTop:5, 
             }]}>
         {'Certainty: '}{Math.floor(prediction.probability*100)}{"%"}
         </Text>
-        <View style={{height:screenHeight*0.02, width:screenHeight*0.02, marginLeft: 10,
-          backgroundColor:this.getCertaintyColor(prediction.probability), borderRadius:100}}/>
-        </View>
+        <Text style={[styles.text,{marginTop:5, fontStyle:'italic',fontWeight:"bold"}]}>
+        {'Suggestion:'}
+        </Text>
+        <Text>{this.suggestionMessage(prediction.className, prediction.probability)}</Text>
+        {/* <View style={{height:screenHeight*0.02, width:screenHeight*0.02, marginLeft: 10,
+          backgroundColor:this.getCertaintyColor(prediction.probability), borderRadius:100}}/> */}
+        {/* </View> */}
       </View>
     )
 
@@ -286,11 +309,13 @@ export default class PredictionScreen extends React.Component{
       top: screenHeight*0.18,}]}>
           {this.state.image && (
             <Text style={{fontSize : screenHeight*0.02, textDecorationLine:'underline'}}>
-              Diagnosis: {this.state.predictions ? '' : <ActivityIndicator size='small' /> //works for iOS, crashes android
+              Results: {this.state.predictions ? '' : <ActivityIndicator size='small' />
                 // <View style={{width:50, height:50, position:'absolute', backgroundColor:'black'}}>
                 //   <ActivityIndicator size='small' />
                 // </View>
-                }
+
+                // TODO: add suggestion: i.e. wether user must see a doctor within next days or user shoud feel safe
+                } 
             </Text>
           )}
           {this.state.isModelReady &&

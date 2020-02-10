@@ -110,7 +110,7 @@ class HomeScreen extends React.Component {
   };
 
   state = {
-    uv : 2, //this.getUVIndex(),
+    uv : 1, //this.getUVIndex(),
     // uv: '',
     colorUV : 'green',
     to_alert: true,
@@ -251,9 +251,7 @@ snow, will increase UV exposure."
           position: 'absolute',
           top: screenWidth*0.02,
           right: screenWidth*0.02
-                    }} onPress={onPress => {Alert.alert('Disclaimer','This is not a diganosis\
-and is not an exhaustive list. You might have a condition that is not suggested\
-                    here. Please consult a doctor if you are concerned about your health')}} >
+                    }} onPress={onPress => {Alert.alert('Disclaimer','The content is not intended to be a substitute for professional medical advice, diagnosis, or treatment.\n\n Always seek the advice of your dermatologist or other qualified health provider with any questions you may have regarding a medical condition.')}} >
 
         <Image source={require("./assets/info_icon.png")} 
            style = {{width: screenWidth*0.125, 
