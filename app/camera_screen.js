@@ -4,6 +4,7 @@ import * as Permissions from 'expo-permissions';
 import { Camera } from 'expo-camera';
 
 import { AsyncStorage } from 'react-native';
+import * as ImagePicker from 'expo-image-picker'
 
 import {
   View,
@@ -26,6 +27,7 @@ export default class CameraScreen extends React.Component {
   // Modified from: https://stackoverflow.com/questions/56879188/take-a-picture-with-expo-camera
     state = {
       hasCameraPermission: null,
+      hasLoadImgPermission: null,
       type: Camera.Constants.Type.back,
       flash: Camera.Constants.FlashMode.off,
       saved_img: null,
@@ -35,6 +37,9 @@ export default class CameraScreen extends React.Component {
     async componentDidMount() {
       const { status } = await Permissions.askAsync(Permissions.CAMERA);
       this.setState({ hasCameraPermission: status === 'granted' });
+
+      const { status_2 } = await Permissions.askAsync(Permissions.CAMERA_ROLL)
+      this.setState({ hasLoadImgPermission: status_2 === 'granted' });
     }
   
     takePicture = async () => {
@@ -53,29 +58,43 @@ export default class CameraScreen extends React.Component {
           // console.log(data.base64)
           // AsyncStorage.setItem('image_saved_base64', data.base64)
 
-          let fileUri = FileSystem.documentDirectory + "Images/";
-
-          try{
-            await FileSystem.copyAsync({from:IMAGE_URI, to: fileUri+'copy1.jpg'})
+          // let fileUri = FileSystem.documentDirectory + "Images/";
+          // try{
+          //   await FileSystem.copyAsync({from:IMAGE_URI, to: fileUri+'copy1.jpg'})
             
-          }
-          catch(err){
-            await FileSystem.makeDirectoryAsync(fileUri, { intermediates: true })
-            await FileSystem.copyAsync({from:IMAGE_URI, to: fileUri+'copy1.jpg'})
-
-
-
-          }
-
-
-          
-          
-
+          // }
+          // catch(err){
+          //   await FileSystem.makeDirectoryAsync(fileUri, { intermediates: true })
+          //   await FileSystem.copyAsync({from:IMAGE_URI, to: fileUri+'copy1.jpg'})
+          // }
       }
   
       // Then go to the prediction screen
       this.props.navigation.navigate('Prediction')
     }
+
+      selectImage = async() =>{
+        try {
+          let response = await ImagePicker.launchImageLibraryAsync({
+            mediaTypes: ImagePicker.MediaTypeOptions.All,
+            allowsEditing: true,
+            aspect: [4, 3]
+          })
+    
+          if (!response.cancelled) {
+            // const source = { uri: response.uri }
+            // this.setState({ image: source })
+            IMAGE_URI = response.uri
+            AsyncStorage.setItem('image_key', IMAGE_URI)
+
+            this.props.navigation.navigate('Prediction')
+
+
+          }
+        } catch (error) {
+          console.log(error)
+        }
+      }
   
     render() {
       const { hasCameraPermission } = this.state;
@@ -158,6 +177,15 @@ export default class CameraScreen extends React.Component {
                             height: screenWidth*0.14,
                             // alignSelf: 'center',
                             opacity: 0.8}}/>
+                </TouchableOpacity>
+
+                <TouchableOpacity style={{position:'absolute', bottom:38, right:10}}
+                  onPress={() => { this.selectImage()}}>
+                  <Image source={require("../assets/upload_img.png")} 
+                  style = {{width: screenWidth*0.14, 
+                            height: screenWidth*0.14,
+                            opacity: 0.8,
+                            tintColor:'#859AC2'}}/>
                 </TouchableOpacity>
                 
                 
